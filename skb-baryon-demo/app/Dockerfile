@@ -7,12 +7,13 @@ FROM node:20-alpine AS base
 WORKDIR /app
 
 # Install dependencies
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+COPY package.json .yarnrc.yml* ./
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
   elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i; \
-  else echo "Lockfile not found." && exit 1; \
+  elif [ -f .yarnrc.yml ]; then yarn install; \
+  else npm install; \
   fi
 
 # Copy application code
@@ -32,6 +33,8 @@ ENV NODE_ENV=production
 COPY --from=base /app/.next ./.next
 COPY --from=base /app/node_modules ./node_modules
 COPY --from=base /app/package.json ./package.json
+
+# Copy public directory
 COPY --from=base /app/public ./public
 
 # Expose port
