@@ -18,4 +18,5 @@
 - Updated Dockerfile to use Next.js standalone output for better production deployment.
 - Modified next.config.js to output standalone build.
 - Removed development volume mount from docker-compose.yml.
-- Added security improvements with non-root user in container. 
+- Added security improvements with non-root user in container.
+- Corrected .env file encoding to remove Byte Order Mark (BOM) for Docker compatibility. 
