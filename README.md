@@ -8,7 +8,7 @@ The visualization is built on a robust mathematical framework, incorporating con
 
 The **Spacetime Klein Bottle (SKB) hypothesis** proposes that:
 - Spacetime is the only fundamental entity.
-- Fundamental particles are non-orientable topological defects in 4D spacetime, specifically with the topology of a Klein bottle.
+- Fundamental particles are non-orientable topological defects in 4D spacetime, specifically with the topology similar to a Klein bottle.
 - Forces and particle properties emerge from the topological and geometric properties of these defects.
 
 This application visualizes the "merger" of three quark sub-SKBs into a single, stable baryon, demonstrating concepts like color confinement and mass generation through binding energy.
