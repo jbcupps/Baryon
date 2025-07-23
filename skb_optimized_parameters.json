@@ -1,0 +1,227 @@
+{
+  "metadata": {
+    "optimization_date": "2025-07-22",
+    "physical_basis": "SKB hypothesis with topological defect dynamics",
+    "optimization_criteria": [
+      "Scale \u221d 1/mass (uncertainty principle)",
+      "Flux arrows \u221d |Q/e| (flux quantization)",
+      "Flux length \u221d |Q|\u221a\u03b1 (electromagnetic coupling)",
+      "Rotation speed \u221d \u221a(E_binding/mass) (energy-motion relation)",
+      "Grid resolution optimized for topology + performance",
+      "Frame count for smooth physical representation"
+    ]
+  },
+  "physical_constants": {
+    "c": 299800000.0,
+    "hbar": 1.055e-34,
+    "e": 1.602e-19,
+    "alpha": 0.0072973525205055605,
+    "planck_length": 1.616e-35,
+    "mev_to_kg": 1.783e-30
+  },
+  "quark_properties": {
+    "u": {
+      "mass_mev": 2.3,
+      "charge": 0.6666666666666666,
+      "holonomy_k": 1,
+      "delta": 0.1,
+      "n_parameter": 1,
+      "color_encoding": "i"
+    },
+    "d": {
+      "mass_mev": 4.8,
+      "charge": -0.3333333333333333,
+      "holonomy_k": 2,
+      "delta": -0.2,
+      "n_parameter": 1,
+      "color_encoding": "j"
+    }
+  },
+  "baryon_properties": {
+    "proton": {
+      "quark_content": [
+        "u",
+        "u",
+        "d"
+      ],
+      "total_mass_mev": 938.3,
+      "binding_energy_mev": -928.7,
+      "total_charge": 1.0,
+      "k_odd_quarks": 1,
+      "stability": "stable"
+    },
+    "neutron": {
+      "quark_content": [
+        "u",
+        "d",
+        "d"
+      ],
+      "total_mass_mev": 939.6,
+      "binding_energy_mev": -930.4,
+      "total_charge": 0.0,
+      "k_odd_quarks": 2,
+      "stability": "stable"
+    }
+  },
+  "optimized_parameters": {
+    "mass_scales": {
+      "u": 1.4,
+      "d": 0.6
+    },
+    "flux_arrows": {
+      "u": 8,
+      "d": 4
+    },
+    "flux_lengths": {
+      "u": 0.02277987809235637,
+      "d": 0.011389939046178185
+    },
+    "rotation_speeds": {
+      "proton": {
+        "u_1": 0.0928117933535779,
+        "u_2": 0.0928117933535779,
+        "d_3": 0.044472317648589416
+      },
+      "neutron": {
+        "u_1": 0.09289670124094437,
+        "d_2": 0.044513002677952516,
+        "d_3": 0.044513002677952516
+      }
+    },
+    "grid_resolution": {
+      "u_segments": 50,
+      "v_segments": 50,
+      "performance_analysis": {
+        "vertices_per_frame": 10000,
+        "triangles_per_frame": 18000,
+        "fps_target": 60
+      }
+    },
+    "frame_counts": {
+      "total_frames": 60,
+      "phases": {
+        "separation_phase": 12,
+        "approach_phase": 30,
+        "merger_phase": 12,
+        "stabilization_phase": 6
+      },
+      "fps_target": 60
+    }
+  },
+  "proton_config": {
+    "name": "Proton",
+    "symbol": "p\u207a",
+    "quark_content": [
+      "u",
+      "u",
+      "d"
+    ],
+    "physical_properties": {
+      "total_mass_mev": 938.3,
+      "binding_energy_mev": -928.7,
+      "total_charge": 1.0,
+      "stability": "stable"
+    },
+    "optimized_visualization": {
+      "scales": [
+        1.4,
+        1.4,
+        0.6
+      ],
+      "flux_arrow_counts": [
+        8,
+        8,
+        4
+      ],
+      "flux_lengths": [
+        0.02277987809235637,
+        0.02277987809235637,
+        0.011389939046178185
+      ],
+      "rotation_speeds": [
+        0.0928117933535779,
+        0.0928117933535779,
+        0.044472317648589416
+      ],
+      "colors": [
+        "#FF4444",
+        "#FF4444",
+        "#4444FF"
+      ],
+      "charges": [
+        0.6666666666666666,
+        0.6666666666666666,
+        -0.3333333333333333
+      ]
+    },
+    "animation_parameters": {
+      "total_frames": 60,
+      "u_segments": 50,
+      "v_segments": 50,
+      "phase_breakdown": {
+        "separation_phase": 12,
+        "approach_phase": 30,
+        "merger_phase": 12,
+        "stabilization_phase": 6
+      }
+    }
+  },
+  "neutron_config": {
+    "name": "Neutron",
+    "symbol": "n\u2070",
+    "quark_content": [
+      "u",
+      "d",
+      "d"
+    ],
+    "physical_properties": {
+      "total_mass_mev": 939.6,
+      "binding_energy_mev": -930.4,
+      "total_charge": 0.0,
+      "stability": "stable"
+    },
+    "optimized_visualization": {
+      "scales": [
+        1.4,
+        0.6,
+        0.6
+      ],
+      "flux_arrow_counts": [
+        8,
+        4,
+        4
+      ],
+      "flux_lengths": [
+        0.02277987809235637,
+        0.011389939046178185,
+        0.011389939046178185
+      ],
+      "rotation_speeds": [
+        0.09289670124094437,
+        0.044513002677952516,
+        0.044513002677952516
+      ],
+      "colors": [
+        "#FF4444",
+        "#4444FF",
+        "#4444FF"
+      ],
+      "charges": [
+        0.6666666666666666,
+        -0.3333333333333333,
+        -0.3333333333333333
+      ]
+    },
+    "animation_parameters": {
+      "total_frames": 60,
+      "u_segments": 50,
+      "v_segments": 50,
+      "phase_breakdown": {
+        "separation_phase": 12,
+        "approach_phase": 30,
+        "merger_phase": 12,
+        "stabilization_phase": 6
+      }
+    }
+  }
+}

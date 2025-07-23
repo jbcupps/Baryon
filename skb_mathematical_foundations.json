@@ -1,0 +1,231 @@
+{
+  "skb_hypothesis": {
+    "description": "Spacetime Klein Bottle hypothesis - particles as non-orientable topological defects in 4D spacetime",
+    "core_postulates": [
+      "Spacetime is the only fundamental entity",
+      "Particles are non-orientable topological defects with Klein bottle topology",
+      "Causal Compensation Principle ensures external causality",
+      "Forces emerge from topological connections (handles)"
+    ]
+  },
+  
+  "parametric_equations": {
+    "klein_bottle_4d": {
+      "description": "4D Klein bottle parametric equations for quarks",
+      "construction": "(t, x, y, z) ~ (t + T, -x, y, z)",
+      "parametric_form": {
+        "x": "(2 + cos(u/2) * sin(v) - sin(u/2) * sin(2*v)) * cos(u) * scale + offset_x",
+        "y": "(2 + cos(u/2) * sin(v) - sin(u/2) * sin(2*v)) * sin(u) * scale + offset_y", 
+        "z": "sin(u/2) * sin(v) + cos(u/2) * sin(2*v) * scale + offset_z"
+      },
+      "parameters": {
+        "u_range": "[0, 2π]",
+        "v_range": "[0, 2π]",
+        "scale": "0.8 * (1 - progress * 0.7)",
+        "rotation_angle": "rotation_speed * frame * (1 - progress)"
+      }
+    },
+    
+    "metric_structure": {
+      "isolated_skb": "ds² = -f(r)dt² + g(r)dr² + r²(dθ² + sin²θdφ²) + h(r)(dt - αdφ)²",
+      "functions": ["f(r)", "g(r)", "h(r) determined by Einstein's equations"]
+    }
+  },
+  
+  "mathematical_formulations": {
+    "holonomy": {
+      "formula": "θ_q = 2π * k / 3 + δ_q",
+      "description": "Quaternionic holonomy determining color and charge",
+      "parameters": {
+        "k": "Integer (1 or 2 for quarks)",
+        "δ_q": "Electromagnetic correction term"
+      }
+    },
+    
+    "flux_quantization": {
+      "formula": "Q = (1/2π) ∮ F",
+      "description": "Electric charge via flux quantization",
+      "boundary_integral": "Over ∂K_p (3D hypersurface boundary)"
+    },
+    
+    "mass_quantization": {
+      "formula": "m_n = 2πnℏ / (c²T)",
+      "ctc_period": "T = 2πℓ_P / √n",
+      "planck_length": "ℓ_P = √(ℏG/c³)"
+    },
+    
+    "causal_compensation": {
+      "principle": "Every SKB with CTCs must be causally compensated",
+      "external_causality": "∮ T_μ dx^μ = 0 for external observers",
+      "internal_consistency": "[∇_μ, ∇_ν]ψ = R_μν ψ",
+      "gluing_compatibility": "Φ*ω_C = -ω_K on ∂K"
+    },
+    
+    "bordism_classes": {
+      "description": "Classification in Ω₂^(Pin⁻) = ℤ₂",
+      "pin_minus_condition": "w₂(TK) + w₁²(TK) = 0 ∈ H²(K; ℤ₂)",
+      "color_neutrality": "Ensures globally defined spinor fields"
+    }
+  },
+  
+  "quark_properties": {
+    "up_quark": {
+      "mass": "2.3 MeV/c²",
+      "charge": "+2/3 e",
+      "holonomy": "θ_u = 2π/3 + δ_u",
+      "delta": "δ_u ≈ +0.10",
+      "ctc_period": "T_u = 2πℓ_P / √1",
+      "n_parameter": 1,
+      "k_parameter": 1,
+      "color_encoding": "Quaternionic unit i"
+    },
+    
+    "down_quark": {
+      "mass": "4.8 MeV/c²",
+      "charge": "-1/3 e",
+      "holonomy": "θ_d = 4π/3 + δ_d",
+      "delta": "δ_d ≈ -0.20",
+      "ctc_period": "T_d = 2πℓ_P / √1",
+      "n_parameter": 1,
+      "k_parameter": 2,
+      "color_encoding": "Quaternionic unit j"
+    },
+    
+    "charm_quark": {
+      "mass": "1275 MeV/c²",
+      "charge": "+2/3 e",
+      "n_parameter": 2,
+      "k_parameter": 1,
+      "delta": "δ_c ≈ +0.08"
+    },
+    
+    "strange_quark": {
+      "mass": "95 MeV/c²",
+      "charge": "-1/3 e", 
+      "n_parameter": 2,
+      "k_parameter": 2,
+      "delta": "δ_s ≈ -0.15"
+    },
+    
+    "top_quark": {
+      "mass": "173000 MeV/c²",
+      "charge": "+2/3 e",
+      "n_parameter": 3,
+      "k_parameter": 1,
+      "delta": "δ_t ≈ +0.05"
+    },
+    
+    "bottom_quark": {
+      "mass": "4180 MeV/c²",
+      "charge": "-1/3 e",
+      "n_parameter": 3,
+      "k_parameter": 2,
+      "delta": "δ_b ≈ -0.12"
+    }
+  },
+  
+  "baryon_properties": {
+    "proton": {
+      "quark_content": ["u", "u", "d"],
+      "total_charge": "+e",
+      "mass": "938.3 MeV/c²",
+      "mass_formula": "M_p c² = 2m_u + m_d + E_binding",
+      "binding_energy": "-928.7 MeV",
+      "k_odd_quarks": 1,
+      "sign": "+",
+      "c_parameter": 1,
+      "bordism_class_mod_16": 0,
+      "color_holonomy": "∏(cos(θ_i/2) + q_i sin(θ_i/2)) = 1",
+      "charge_radius": "r_p ≈ ℏ/(M_p c) ≈ 0.8 fm"
+    },
+    
+    "neutron": {
+      "quark_content": ["u", "d", "d"],
+      "total_charge": "0",
+      "mass": "939.6 MeV/c²",
+      "k_odd_quarks": 2,
+      "sign": "+",
+      "c_parameter": 1,
+      "bordism_class_mod_16": 0
+    }
+  },
+  
+  "merger_dynamics": {
+    "animation_parameters": {
+      "total_frames": 100,
+      "initial_positions": [
+        [-3, -2, 0],
+        [3, -2, 0], 
+        [0, 3, 0]
+      ],
+      "final_position": [0, 0, 0],
+      "scale_evolution": "0.8 * (1 - progress * 0.7)",
+      "progress_formula": "frame / total_frames"
+    },
+    
+    "flux_vectors": {
+      "proton": {
+        "num_arrows": [7, 7, 3],
+        "flux_lengths": [0.33, 0.33, 0.17],
+        "colors": ["red", "red", "blue"]
+      },
+      "neutron": {
+        "num_arrows": [7, 3, 3],
+        "flux_lengths": [0.33, 0.17, 0.17],
+        "colors": ["red", "blue", "green"]
+      }
+    },
+    
+    "rotation_dynamics": {
+      "energy_as_motion": "Rotational motion represents energy content",
+      "rotation_speeds": {
+        "up_quark": 0.1,
+        "down_quark": 0.05
+      },
+      "rotation_formula": "rotation_speed * frame * (1 - progress)"
+    }
+  },
+  
+  "pin_minus_structures": {
+    "definition": "Principal Pin⁻(3,1) bundle P → K",
+    "exact_sequence": "1 → ℤ₂ → Pin⁻(3,1) → O(3,1) → 1",
+    "obstruction_condition": "w₂(TK) + w₁²(TK) = 0 ∈ H²(K; ℤ₂)",
+    "spinor_statistics": "ψ(γ) = -ψ(1) for orientation-reversing loops",
+    "gluing_conditions": {
+      "topological_compatibility": "Obstruction vanishes",
+      "pin_compatibility": "Bundle maps lift to Pin⁻",
+      "holonomy_compensation": "Color cycle product is trivial"
+    }
+  },
+  
+  "topological_invariants": {
+    "fundamental_group": "π₁(K) = ⟨a,b | aba⁻¹ = b⁻¹⟩",
+    "stiefel_whitney_classes": {
+      "w₁": "First Stiefel-Whitney class (non-orientability)",
+      "w₂": "Second Stiefel-Whitney class"
+    },
+    "cohomology": "[F] ∈ H²_dR(M \\ K_p, ℝ)",
+    "bordism_classification": "Ω₂^(Pin⁻) = ℤ₂"
+  },
+  
+  "physical_constants": {
+    "planck_length": "ℓ_P = √(ℏG/c³) ≈ 1.616 × 10⁻³⁵ m",
+    "fine_structure": "α = e²/(4πε₀ℏc) ≈ 1/137",
+    "electromagnetic_coupling": "α = (e²/Φ₀) · (ℓ_P/λ_C) / (2π)",
+    "causal_string_tension": "σ = (1/2π) ∫ |T_μν|² √(-g) d²ξ",
+    "separation_energy": "E_sep(r) = σ · r"
+  },
+  
+  "maxwell_equations_derivation": {
+    "homogeneous": {
+      "dF_equals_zero": "dF = 0 (no magnetic monopoles, Faraday's law)",
+      "d_star_F_equals_zero": "d(⋆F) = 0 away from defects"
+    },
+    "inhomogeneous": {
+      "sourced_equation": "d(⋆F) = μ₀J globally",
+      "current_localization": "J localized on K_p",
+      "gauss_law": "∇·E = ρ/ε₀",
+      "ampere_maxwell": "∇×B = μ₀J + μ₀ε₀∂E/∂t"
+    }
+  }
+}

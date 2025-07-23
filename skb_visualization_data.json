@@ -1,0 +1,225 @@
+{
+  "presets": {
+    "proton": {
+      "name": "Proton",
+      "symbol": "p⁺",
+      "quark_content": ["u", "u", "d"],
+      "quark_labels": ["u₁ quark (Sub-SKB)", "u₂ quark (Sub-SKB)", "d quark (Sub-SKB)"],
+      "colors": ["#FF4444", "#FF4444", "#4444FF"],
+      "color_names": ["red", "red", "blue"],
+      "charges": ["+2/3", "+2/3", "-1/3"],
+      "masses": [2.3, 2.3, 4.8],
+      "holonomies": ["2π/3 + 0.10", "2π/3 + 0.10", "4π/3 - 0.20"],
+      "num_arrows": [7, 7, 3],
+      "flux_lengths": [0.33, 0.33, 0.17],
+      "rotation_speeds": [0.1, 0.1, 0.05],
+      "total_charge": "+e",
+      "total_mass": "938.3 MeV/c²",
+      "binding_energy": "-928.7 MeV",
+      "k_odd_quarks": 1,
+      "bordism_class": 0,
+      "stability": "stable"
+    },
+    
+    "neutron": {
+      "name": "Neutron", 
+      "symbol": "n⁰",
+      "quark_content": ["u", "d", "d"],
+      "quark_labels": ["u quark (Sub-SKB)", "d₁ quark (Sub-SKB)", "d₂ quark (Sub-SKB)"],
+      "colors": ["#FF4444", "#4444FF", "#44FF44"],
+      "color_names": ["red", "blue", "green"],
+      "charges": ["+2/3", "-1/3", "-1/3"],
+      "masses": [2.3, 4.8, 4.8],
+      "holonomies": ["2π/3 + 0.10", "4π/3 - 0.20", "4π/3 - 0.20"],
+      "num_arrows": [7, 3, 3],
+      "flux_lengths": [0.33, 0.17, 0.17],
+      "rotation_speeds": [0.1, 0.05, 0.05],
+      "total_charge": "0",
+      "total_mass": "939.6 MeV/c²",
+      "binding_energy": "-930.4 MeV",
+      "k_odd_quarks": 2,
+      "bordism_class": 0,
+      "stability": "stable"
+    }
+  },
+  
+  "animation_config": {
+    "total_frames": 100,
+    "initial_positions": [
+      [-3, -2, 0],
+      [3, -2, 0],
+      [0, 3, 0]
+    ],
+    "final_position": [0, 0, 0],
+    "scale_function": "0.8 * (1 - progress * 0.7)",
+    "rotation_function": "rotation_speed * frame * (1 - progress)",
+    "progress_function": "frame / total_frames"
+  },
+  
+  "klein_bottle_parameters": {
+    "u_range": [0, "2π"],
+    "v_range": [0, "2π"],
+    "u_segments": 30,
+    "v_segments": 30,
+    "parametric_equations": {
+      "x": "(2 + cos(u/2) * sin(v) - sin(u/2) * sin(2*v)) * cos(u) * scale + offset[0]",
+      "y": "(2 + cos(u/2) * sin(v) - sin(u/2) * sin(2*v)) * sin(u) * scale + offset[1]",
+      "z": "sin(u/2) * sin(v) + cos(u/2) * sin(2*v) * scale + offset[2]"
+    }
+  },
+  
+  "material_properties": {
+    "wireframe": true,
+    "transparent": true,
+    "opacity": 0.6,
+    "side": "DoubleSide"
+  },
+  
+  "flux_vector_config": {
+    "arrow_geometry": "THREE.ArrowHelper",
+    "random_positioning": true,
+    "direction_formula": "new THREE.Vector3(Math.sin(randV) * (1 - progress), Math.cos(randU) * (1 - progress), 0).normalize()",
+    "length_scaling": "flux_length * (1 - progress * 0.3)",
+    "color_matching": "matches parent quark color"
+  },
+  
+  "camera_settings": {
+    "type": "PerspectiveCamera",
+    "fov": 75,
+    "aspect_ratio": "container_width / container_height",
+    "near": 0.1,
+    "far": 1000,
+    "initial_position": [0, 0, 5],
+    "controls": "OrbitControls"
+  },
+  
+  "scene_settings": {
+    "background_color": "#f4f4f4",
+    "ambient_light": {
+      "color": "#404040",
+      "intensity": 0.4
+    },
+    "directional_light": {
+      "color": "#ffffff",
+      "intensity": 0.6,
+      "position": [1, 1, 1]
+    }
+  },
+  
+  "ui_controls": {
+    "play_pause_button": {
+      "id": "play-pause",
+      "text": "Play/Pause",
+      "function": "toggleAnimation"
+    },
+    "flux_toggle": {
+      "id": "toggle-flux",
+      "type": "checkbox",
+      "label": "Show Flux Vectors",
+      "default": true
+    },
+    "rotation_toggle": {
+      "id": "toggle-rotation", 
+      "type": "checkbox",
+      "label": "Show Energy Rotation",
+      "default": true
+    },
+    "progress_display": {
+      "id": "progress-text",
+      "format": "Merge Progress: {progress}%"
+    }
+  },
+  
+  "physics_constants": {
+    "planck_length": {
+      "symbol": "ℓ_P",
+      "value": "1.616 × 10⁻³⁵ m",
+      "formula": "√(ℏG/c³)"
+    },
+    "fine_structure": {
+      "symbol": "α",
+      "value": "1/137.036",
+      "formula": "e²/(4πε₀ℏc)"
+    },
+    "elementary_charge": {
+      "symbol": "e",
+      "value": "1.602 × 10⁻¹⁹ C"
+    },
+    "reduced_planck": {
+      "symbol": "ℏ",
+      "value": "1.055 × 10⁻³⁴ J·s"
+    },
+    "speed_of_light": {
+      "symbol": "c",
+      "value": "2.998 × 10⁸ m/s"
+    }
+  },
+  
+  "mathematical_formulas": {
+    "holonomy": "θ_q = 2π k / 3 + δ_q",
+    "flux_quantization": "Q = (1/2π) ∮ F",
+    "mass_quantization": "m_n = 2πnℏ / (c²T)",
+    "ctc_period": "T = 2πℓ_P / √n",
+    "color_confinement": "∏(cos(θ_i/2) + q_i sin(θ_i/2)) = 1",
+    "pin_minus_condition": "w₂(TK) + w₁²(TK) = 0",
+    "causal_compensation": "∮ T_μ dx^μ = 0"
+  },
+  
+  "analysis_tables": {
+    "quark_properties": [
+      {
+        "quark": "up (u)",
+        "mass": "2.3 MeV/c²",
+        "charge": "+2/3 e",
+        "n": 1,
+        "k": 1,
+        "delta": "+0.10",
+        "holonomy": "2π/3 + δ_u"
+      },
+      {
+        "quark": "down (d)",
+        "mass": "4.8 MeV/c²", 
+        "charge": "-1/3 e",
+        "n": 1,
+        "k": 2,
+        "delta": "-0.20",
+        "holonomy": "4π/3 + δ_d"
+      }
+    ],
+    
+    "baryon_properties": [
+      {
+        "baryon": "Proton",
+        "quark_content": "uud",
+        "k_odd": 1,
+        "sign": "+",
+        "c": 1,
+        "bordism_class": 0,
+        "charge": "+e",
+        "mass": "938.3 MeV/c²"
+      },
+      {
+        "baryon": "Neutron",
+        "quark_content": "udd", 
+        "k_odd": 2,
+        "sign": "+",
+        "c": 1,
+        "bordism_class": 0,
+        "charge": "0",
+        "mass": "939.6 MeV/c²"
+      }
+    ]
+  },
+  
+  "explanatory_text": {
+    "introduction": "In the SKB hypothesis, baryons like protons (uud) and neutrons (udd) are composite topological defects formed by merging three sub-SKBs (quarks). Properties emerge from holonomy θ_q = 2π k / 3 + δ_q, flux quantization Q_q = (1/2π) ∮ F, and Pin⁻ gluing ensuring w₂ + w₁² = 0. Merging enforces color-neutrality and causal compensation.",
+    
+    "color_confinement": "Confinement via quaternionic holonomy: ∏(cos θ/2 + i sin θ/2) = 1. Individual quarks cannot exist in isolation due to uncompensated closed timelike curves (CTCs). Only color-neutral combinations produce globally defined, stable defects.",
+    
+    "flux_quantization": "Electric charge emerges from quantized flux through the SKB boundary: Q = (1/2π) ∮ F. The number and length of flux arrows scale with |Q/e|, representing the topological charge density.",
+    
+    "energy_rotation": "Energy manifests as rotational motion of the Klein bottle structure. Lighter quarks (up) rotate faster than heavier ones (down), representing their higher energy-to-mass ratio.",
+    
+    "merger_dynamics": "The animation shows three initially separated quark-SKBs merging at the origin. As they approach, their individual flux vectors diminish while collective properties emerge. The final state represents a stable, color-neutral baryon."
+  }
+}
