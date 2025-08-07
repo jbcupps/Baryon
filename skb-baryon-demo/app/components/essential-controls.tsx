@@ -52,7 +52,7 @@ const EssentialControls: React.FC<EssentialControlsProps> = ({
   };
 
   return (
-    <Card className="backdrop-blur-sm bg-white/95 border shadow-lg">
+    <Card className="scientific-panel">
       <CardContent className="p-4 space-y-4">
         {/* Baryon Selection */}
         <div className="space-y-2">

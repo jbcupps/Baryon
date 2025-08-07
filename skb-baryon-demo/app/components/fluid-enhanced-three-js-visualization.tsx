@@ -793,24 +793,9 @@ const FluidEnhancedThreeJSVisualization: React.FC<FluidEnhancedThreeJSVisualizat
     scale: number
   ) => {
     if (!fluidDynamicsGroupRef.current || !showFluidDynamics) return;
-    
-    // Render proximity influence zones
-    const influenceGeometry = new THREE.SphereGeometry(
-      fluidDynamicsParams.proximityThreshold * scale * 0.3, 
-      16, 
-      12
-    );
-    const influenceMaterial = new THREE.MeshBasicMaterial({
-      color: new THREE.Color().setHSL(quarkIndex * 0.33, 0.6, 0.4),
-      transparent: true,
-      opacity: 0.15 + fluidDynamicsParams.proximityInfluence * 0.1,
-      wireframe: true
-    });
-    
-    const influenceMesh = new THREE.Mesh(influenceGeometry, influenceMaterial);
-    influenceMesh.position.copy(position);
-    fluidDynamicsGroupRef.current.add(influenceMesh);
-    
+    // Spheres removed per visualization objective: only manifold wireframes should be shown
+    // Keep interaction force lines for context
+
     // Render interaction force lines
     interactionVectors.forEach((interactionVec, index) => {
       if (interactionVec.length() > 0) {

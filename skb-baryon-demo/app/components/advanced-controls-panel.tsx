@@ -114,7 +114,7 @@ const AdvancedControlsPanel: React.FC<AdvancedControlsPanelProps> = ({
       {/* Color Confinement Controls */}
       <Card className="scientific-panel">
         <CardHeader 
-          className="cursor-pointer" 
+          className="cursor-pointer pb-3" 
           onClick={() => toggleSection('confinement')}
         >
           <CardTitle className="flex items-center justify-between text-lg">
@@ -134,7 +134,7 @@ const AdvancedControlsPanel: React.FC<AdvancedControlsPanelProps> = ({
         </CardHeader>
         
         {expandedSections.confinement && (
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 pt-0">
             <div className="space-y-3">
               <div>
                 <ControlTooltip
@@ -259,7 +259,7 @@ const AdvancedControlsPanel: React.FC<AdvancedControlsPanelProps> = ({
       {/* Advanced Physics Controls */}
       <Card className="scientific-panel">
         <CardHeader 
-          className="cursor-pointer"
+          className="cursor-pointer pb-3"
           onClick={() => toggleSection('physics')}
         >
           <CardTitle className="flex items-center justify-between text-lg">
@@ -279,7 +279,7 @@ const AdvancedControlsPanel: React.FC<AdvancedControlsPanelProps> = ({
         </CardHeader>
         
         {expandedSections.physics && (
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 pt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <ControlTooltip
@@ -483,7 +483,7 @@ const AdvancedControlsPanel: React.FC<AdvancedControlsPanelProps> = ({
       {/* Advanced Visualization Options */}
       <Card className="scientific-panel">
         <CardHeader 
-          className="cursor-pointer"
+          className="cursor-pointer pb-3"
           onClick={() => toggleSection('visualization')}
         >
           <CardTitle className="flex items-center justify-between text-lg">
@@ -503,7 +503,7 @@ const AdvancedControlsPanel: React.FC<AdvancedControlsPanelProps> = ({
         </CardHeader>
         
         {expandedSections.visualization && (
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 pt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-center justify-between">
                 <ControlTooltip
@@ -594,7 +594,7 @@ const AdvancedControlsPanel: React.FC<AdvancedControlsPanelProps> = ({
       {/* System Status */}
       <Card className="scientific-panel">
         <CardHeader 
-          className="cursor-pointer"
+          className="cursor-pointer pb-3"
           onClick={() => toggleSection('status')}
         >
           <CardTitle className="flex items-center justify-between text-lg">
@@ -614,7 +614,7 @@ const AdvancedControlsPanel: React.FC<AdvancedControlsPanelProps> = ({
         </CardHeader>
         
         {expandedSections.status && (
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 pt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">

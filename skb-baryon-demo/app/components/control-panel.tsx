@@ -73,7 +73,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     <div className="space-y-4">
       {/* Preset Selection */}
       <Card className="scientific-panel">
-        <CardHeader>
+        <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
             <Settings2 className="w-4 h-4" />
             Baryon Configuration
@@ -82,7 +82,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
             Select proton or neutron formation
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pt-0">
           <div className="space-y-2">
             <ControlTooltip
               title="Baryon Type Selection"
@@ -146,7 +146,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
 
       {/* Animation Controls */}
       <Card className="scientific-panel">
-        <CardHeader>
+        <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
             <Play className="w-4 h-4" />
             Animation Controls
@@ -155,7 +155,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
             Control the merger animation
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pt-0">
           <div className="flex gap-2">
             <ControlTooltip
               title={isPlaying ? "Pause Animation" : "Play Animation"}
@@ -227,7 +227,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
 
       {/* Visualization Options */}
       <Card className="scientific-panel">
-        <CardHeader>
+        <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
             <Atom className="w-4 h-4" />
             Display Options
@@ -236,7 +236,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
             Toggle visualization features
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pt-0">
           <div className="flex items-center justify-between">
             <ControlTooltip
               title="Flux Vectors"
@@ -282,7 +282,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
 
       {/* Variable Impact */}
       <Card className="scientific-panel">
-        <CardHeader>
+        <CardHeader className="pb-3">
           <ControlTooltip
             title="Variable Impact Analysis"
             description="Real-time analysis of how merger progress affects various system parameters"
@@ -297,7 +297,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
             Live parameter relationships
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className="space-y-3 pt-0">
           <div className="text-sm space-y-2">
             <div className="flex justify-between">
               <StatusTooltip

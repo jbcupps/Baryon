@@ -1,10 +1,11 @@
 generator client {
-    provider = "prisma-client-js"
-    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
-    output = "/home/ubuntu/skb-baryon-demo/app/node_modules/.prisma/client"
+  provider = "prisma-client-js"
+  // Rely on the default engine for the target platform (native). Explicit binaryTargets and custom output
+  // paths make Docker builds brittle across environments. Leaving defaults ensures Prisma generates
+  // the client into `node_modules/@prisma/client` during install.
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }

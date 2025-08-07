@@ -484,7 +484,8 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
         renderEnhancedFluxVectors(i, currentPos, confinementScale, rotationAngle, animationProgress);
       }
       
-      // Render stress tensor visualization
+      // Optionally render stress tensor visualization (ring markers)
+      // Keeping rings lightweight and non-spherical; spheres are intentionally omitted
       if (showStressTensor) {
         renderStressTensorField(i, currentPos, confinementScale);
       }
@@ -637,7 +638,7 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
     }
   };
 
-  // Render necking bridges between quarks
+  // Render necking bridges between quarks (as wireframe cylinders connecting manifolds)
   const renderNeckingBridges = () => {
     if (!neckingGroupRef.current) return;
     

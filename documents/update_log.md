@@ -20,3 +20,19 @@
 - Removed development volume mount from docker-compose.yml.
 - Added security improvements with non-root user in container.
 - Corrected .env file encoding to remove Byte Order Mark (BOM) for Docker compatibility. 
+
+## Docker and Prisma Stability Improvements
+- Simplified `prisma/schema.prisma` to use default client output and platform-native engine for portability in Docker (Alpine).
+- Updated `app/Dockerfile` to install `openssl` and `libstdc++`, run `prisma generate`, and copy Prisma engines for production runtime.
+- Added explicit `env_file: .env` to `docker-compose.yml` for consistent variable loading.
+- Created root `.env.example` with safe local defaults; do not commit a real `.env` to source control.
+
+## Visualization Objective Alignment
+- Removed non-manifold spheres from the 3D scene to focus strictly on manifold wireframes.
+- Edited `components/fluid-enhanced-three-js-visualization.tsx` to eliminate `SphereGeometry` proximity zones; retained line-based interaction cues.
+- Kept ring and bridge indicators minimal and wireframe-only to avoid spherical glyphs; manifolds remain colored wireframe Klein bottle meshes.
+
+## UI Formatting Consistency (Control Panels)
+- Standardized card spacing across panels by applying `pb-3` to headers and `pt-0` to contents.
+- Unified panel styling by using the `scientific-panel` class for `EssentialControls`.
+- Ensured consistent responsive spacing and section toggles in `advanced-controls-panel.tsx` and `control-panel.tsx`.
