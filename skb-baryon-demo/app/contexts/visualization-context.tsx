@@ -123,7 +123,7 @@ export const VisualizationProvider: React.FC<VisualizationProviderProps> = ({ ch
     showDeformation: true,
     showStressTensor: false,
     showFluidFlow: false,
-    showNecking: true,
+    showNecking: false,
     showFluidDynamics: true, // New toggle for fluid dynamics
 
     // Real-time data from visualization

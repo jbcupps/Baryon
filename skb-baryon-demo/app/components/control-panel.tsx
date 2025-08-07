@@ -166,19 +166,9 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
               <Button
                 onClick={() => setIsPlaying(!isPlaying)}
                 variant={isPlaying ? "default" : "outline"}
-                className="control-button flex-1 cursor-help"
+                className="control-button flex-1 cursor-help justify-center"
               >
-                {isPlaying ? (
-                  <>
-                    <Pause className="w-4 h-4 mr-2" />
-                    Pause
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-4 h-4 mr-2" />
-                    Play
-                  </>
-                )}
+                {isPlaying ? 'Pause' : 'Play'}
               </Button>
             </ControlTooltip>
             

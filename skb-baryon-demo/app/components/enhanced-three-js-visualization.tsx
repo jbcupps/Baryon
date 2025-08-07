@@ -497,7 +497,7 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
     });
     
     // Render inter-quark connections (necking bridges)
-    if (showNecking && animationProgress > 0.3) {
+      if (showNecking && animationProgress > 0.3) {
       renderNeckingBridges();
     }
   };

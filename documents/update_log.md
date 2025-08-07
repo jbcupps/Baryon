@@ -36,3 +36,7 @@
 - Standardized card spacing across panels by applying `pb-3` to headers and `pt-0` to contents.
 - Unified panel styling by using the `scientific-panel` class for `EssentialControls`.
 - Ensured consistent responsive spacing and section toggles in `advanced-controls-panel.tsx` and `control-panel.tsx`.
+
+## Paper Integration (Mathematics & Topology)
+- Added `components/bordism-eta-demo.tsx`: interactive η-invariant demo mapping to Ω₄^{Pin⁻} ≅ Z/16Z per Bordism paper.
+- Linked demo inside `components/math-formulas.tsx` and corrected focus to 4D Pin⁻ bordism classes with η-based explanation.

@@ -6,6 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Zap, Atom, RotateCw, Target, Infinity, Layers } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+const BordismEtaDemo = dynamic(() => import('./bordism-eta-demo'), { ssr: false });
 import SafeMathComponent from './safe-math-component';
 
 const MathFormulas: React.FC = () => {
@@ -372,6 +375,9 @@ const MathFormulas: React.FC = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Bordism η-Invariant Demo (from papers) */}
+      <BordismEtaDemo />
     </div>
   );
 };
