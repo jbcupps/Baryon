@@ -26,6 +26,11 @@ interface EnhancedThreeJSVisualizationProps {
   // Callbacks for real-time data
   onConfinementUpdate?: (data: any) => void;
   onPhysicsUpdate?: (data: any) => void;
+
+  // DSIM parameters (optional)
+  dsimDensityRate?: number;
+  dsimProximityThreshold?: number;
+  dsimTimeStep?: number;
 }
 
 const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> = ({
@@ -42,7 +47,10 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
   showFluidFlow,
   showNecking,
   onConfinementUpdate,
-  onPhysicsUpdate
+  onPhysicsUpdate,
+  dsimDensityRate,
+  dsimProximityThreshold,
+  dsimTimeStep
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene>();
@@ -63,6 +71,23 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
   // Store original geometries for deformation calculations
   const originalGeometriesRef = useRef<THREE.BufferGeometry[]>([]);
   const deformedGeometriesRef = useRef<THREE.BufferGeometry[]>([]);
+
+  // Stable refs so UI controls immediately affect the running animation loop
+  const isPlayingRef = useRef<boolean>(isPlaying);
+  const progressRef = useRef<number>(progress);
+  const showFluxRef = useRef<boolean>(showFlux);
+  const showRotationRef = useRef<boolean>(showRotation);
+  const physicsRef = useRef<PhysicsParameters>(physicsParams);
+  const confinementRef = useRef<ConfinementParameters>(confinementParams);
+  const togglesRef = useRef({ showDeformation, showStressTensor, showFluidFlow, showNecking });
+
+  useEffect(() => { isPlayingRef.current = isPlaying; }, [isPlaying]);
+  useEffect(() => { progressRef.current = progress; }, [progress]);
+  useEffect(() => { showFluxRef.current = showFlux; }, [showFlux]);
+  useEffect(() => { showRotationRef.current = showRotation; }, [showRotation]);
+  useEffect(() => { physicsRef.current = physicsParams; }, [physicsParams]);
+  useEffect(() => { confinementRef.current = confinementParams; }, [confinementParams]);
+  useEffect(() => { togglesRef.current = { showDeformation, showStressTensor, showFluidFlow, showNecking }; }, [showDeformation, showStressTensor, showFluidFlow, showNecking]);
 
   // Enhanced preset configurations
   const presets = {
@@ -159,20 +184,13 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
     let z = (Math.sin(u/2) * Math.sin(v) + Math.cos(u/2) * Math.sin(2*v)) * scale;
     
     // Apply energy rotation
-    if (rotationAngle !== 0 && showRotation) {
+    if (rotationAngle !== 0 && showRotationRef.current) {
       const cosRot = Math.cos(rotationAngle);
       const sinRot = Math.sin(rotationAngle);
       const newX = x * cosRot - y * sinRot;
       const newY = x * sinRot + y * cosRot;
       x = newX;
       y = newY;
-    }
-    
-    // Apply deformation if enabled
-    if (showDeformation) {
-      x += deformationVector.x * physicsParams.deformationIntensity;
-      y += deformationVector.y * physicsParams.deformationIntensity;
-      z += deformationVector.z * physicsParams.deformationIntensity;
     }
     
     return new THREE.Vector3(x + offset.x, y + offset.y, z + offset.z);
@@ -301,8 +319,9 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
     const animate = () => {
       animationIdRef.current = requestAnimationFrame(animate);
       
-      // Update time for physics calculations
-      timeRef.current += 0.016; // ~60fps
+      // Update time for physics calculations (scaled by DSIM dt)
+      const dtFactor = typeof dsimTimeStep === 'number' ? dsimTimeStep : 1.0;
+      timeRef.current += 0.016 * dtFactor; // ~60fps
 
       // Enhanced camera rotation with momentum
       if (!mouseDown && (Math.abs(rotationVelocity.x) > 0.001 || Math.abs(rotationVelocity.y) > 0.001)) {
@@ -322,12 +341,13 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
       camera.lookAt(0, 0, 0);
 
       // Update animation frame
-      if (isPlaying) {
-        frameRef.current = (frameRef.current + 1) % 100;
+      if (isPlayingRef.current) {
+        const step = Math.max(1, Math.floor((dsimTimeStep ?? 1.0)));
+        frameRef.current = (frameRef.current + step) % 100;
         const newProgress = frameRef.current / 100;
         onProgressChange(newProgress);
       } else {
-        frameRef.current = Math.floor(progress * 100);
+        frameRef.current = Math.floor(progressRef.current * 100);
       }
 
       renderAdvancedVisualization();
@@ -387,19 +407,19 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
     currentPreset.quark_content.forEach((quark, i) => {
       const currentPos = currentPositions[i];
       
-      // CTC-based scale evolution
+      // CTC-based scale evolution (mathematical manifold baseline)
       const initial_scale = 0.6 * currentPreset.ctc_scales[i];
       const final_scale = 0.3;
       const baseScale = initial_scale * (1 - animationProgress) + final_scale * animationProgress;
-      
-      // Confinement-adjusted scale
-      const confinementScale = baseScale * (1 + confinementData.confinementStrength * 0.2);
+
+      // Apply user-controlled confinement scale directly from controls (no fluid override)
+      const confinementScale = baseScale * confinementParams.confinementScale;
       
       // Energy rotation with holonomy influence
       const holonomyRotation = confinementData.holonomies[i]?.theta || 0;
       const rotationAngle = showRotation ? 
-        (currentPreset.base_rotation_speed * frameRef.current * (1 - animationProgress) * 
-         currentPreset.rotation_mass_ratios[i] + holonomyRotation * 0.1) : 0;
+        (currentPreset.base_rotation_speed * frameRef.current * (1 - animationProgress) *
+         currentPreset.rotation_mass_ratios[i] + holonomyRotation * (0.1 * confinementParams.holonomyStrength)) : 0;
 
       // Create base geometry
       const geometry = new THREE.BufferGeometry();
@@ -410,27 +430,13 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
       const uSegments = 30;
       const vSegments = 30;
       
-      // Generate vertices with enhanced deformation
+      // Generate vertices strictly from the mathematical manifold (no deformation applied)
       for (let u = 0; u <= uSegments; u++) {
         for (let v = 0; v <= vSegments; v++) {
           const uParam = (u / uSegments) * 2 * Math.PI;
           const vParam = (v / vSegments) * 2 * Math.PI;
-          
-          // Calculate proximity-based deformation
-          const proximityDeformation = new THREE.Vector3(0, 0, 0);
-          if (showDeformation && physicsData?.fluidState) {
-            // Add rippling effects
-            const ripple = calculateRippling(uParam, vParam, timeRef.current, animationProgress);
-            proximityDeformation.add(ripple);
-            
-            // Add necking effects
-            if (showNecking && animationProgress > 0.3) {
-              const necking = calculateNeckingDeformation(uParam, vParam, currentPos, currentPositions, animationProgress);
-              proximityDeformation.add(necking);
-            }
-          }
-          
-          const point = kleinBottle(uParam, vParam, confinementScale, currentPos, rotationAngle, proximityDeformation);
+          // Use pure manifold position; overlays rendered separately
+          const point = kleinBottle(uParam, vParam, confinementScale, currentPos, rotationAngle);
           vertices.push(point.x, point.y, point.z);
           
           // Color variation based on holonomy and stress
@@ -479,25 +485,27 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
       const mesh = new THREE.Mesh(geometry, material);
       kleinBottleGroupRef.current!.add(mesh);
       
-      // Enhanced flux vectors with confinement scaling
+      // Enhanced flux vectors with confinement scaling (overlay)
       if (showFlux) {
         renderEnhancedFluxVectors(i, currentPos, confinementScale, rotationAngle, animationProgress);
       }
       
-      // Optionally render stress tensor visualization (ring markers)
-      // Keeping rings lightweight and non-spherical; spheres are intentionally omitted
+      // Optionally render stress tensor visualization (overlay)
       if (showStressTensor) {
         renderStressTensorField(i, currentPos, confinementScale);
       }
       
-      // Render fluid flow vectors
+      // Render fluid flow vectors (overlay)
       if (showFluidFlow && physicsData?.fluidState) {
         renderFluidFlowVectors(i, currentPos, physicsData.fluidState);
       }
     });
     
     // Render inter-quark connections (necking bridges)
-      if (showNecking && animationProgress > 0.3) {
+      const prox = typeof dsimProximityThreshold === 'number' ? dsimProximityThreshold : 1.5;
+      const proxNorm = Math.max(0, Math.min(1, (prox - 0.5) / (3.0 - 0.5)));
+      const neckingStart = 0.2 + 0.6 * proxNorm;
+      if (showNecking && animationProgress > neckingStart) {
       renderNeckingBridges();
     }
   };
@@ -514,7 +522,8 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
     if (!holonomy || !fluxGroupRef.current) return;
     
     const baseArrows = currentPreset.num_arrows[quarkIndex];
-    const numArrows = Math.floor(baseArrows * (1 - progress * 0.6) * (1 + confinementData.confinementStrength * 0.5));
+    const densityMult = Math.max(0.25, Math.min(3, (dsimDensityRate ?? 10) / 20));
+    const numArrows = Math.floor(baseArrows * (1 - progress * 0.6) * (1 + confinementData.confinementStrength * 0.5) * densityMult);
     
     const baseLength = currentPreset.flux_lengths[quarkIndex];
     const fluxLength = baseLength * (1 - progress * 0.4) * scale * confinementParams.fluxTubeStrength;

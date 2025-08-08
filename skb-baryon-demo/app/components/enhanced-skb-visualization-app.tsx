@@ -62,7 +62,7 @@ const EnhancedSKBVisualizationApp: React.FC = () => {
   });
 
   // Advanced visualization options
-  const [showDeformation, setShowDeformation] = useState(true);
+  const [showDeformation, setShowDeformation] = useState(false);
   const [showStressTensor, setShowStressTensor] = useState(false);
   const [showFluidFlow, setShowFluidFlow] = useState(false);
   const [showNecking, setShowNecking] = useState(true);

@@ -29,6 +29,19 @@ const OptimizedThreeJSVisualization: React.FC<OptimizedThreeJSVisualizationProps
   const kleinBottleGroupRef = useRef<THREE.Group>();
   const fluxGroupRef = useRef<THREE.Group>();
 
+  // Stable refs so controls immediately affect the running loop
+  const isPlayingRef = useRef<boolean>(isPlaying);
+  const progressRef = useRef<number>(progress);
+  const showFluxRef = useRef<boolean>(showFlux);
+  const showRotationRef = useRef<boolean>(showRotation);
+  const presetRef = useRef<typeof currentPreset>(currentPreset);
+
+  useEffect(() => { isPlayingRef.current = isPlaying; }, [isPlaying]);
+  useEffect(() => { progressRef.current = progress; }, [progress]);
+  useEffect(() => { showFluxRef.current = showFlux; }, [showFlux]);
+  useEffect(() => { showRotationRef.current = showRotation; }, [showRotation]);
+  useEffect(() => { presetRef.current = currentPreset; }, [selectedPreset]);
+
   // Optimized preset configurations based on physical calculations
   const optimizedPresets = {
     proton: {
@@ -105,7 +118,7 @@ const OptimizedThreeJSVisualization: React.FC<OptimizedThreeJSVisualizationProps
     let z = (Math.sin(u/2) * Math.sin(v) + Math.cos(u/2) * Math.sin(2*v)) * scale;
     
     // Apply energy-derived rotation
-    if (rotationAngle !== 0 && showRotation) {
+    if (rotationAngle !== 0 && showRotationRef.current) {
       const cosRot = Math.cos(rotationAngle);
       const sinRot = Math.sin(rotationAngle);
       const newX = x * cosRot - y * sinRot;
@@ -119,7 +132,7 @@ const OptimizedThreeJSVisualization: React.FC<OptimizedThreeJSVisualizationProps
 
   // Calculate animation phase for realistic merger dynamics
   const getAnimationPhase = (progress: number): string => {
-    const frame = Math.floor(progress * animationConfig.total_frames);
+    const frame = Math.floor(progressRef.current * animationConfig.total_frames);
     
     if (frame <= animationConfig.phases.separation_phase) {
       return 'separation';
@@ -235,12 +248,12 @@ const OptimizedThreeJSVisualization: React.FC<OptimizedThreeJSVisualizationProps
       camera.lookAt(0, 0, 0);
 
       // Update animation frame with optimized frame count
-      if (isPlaying) {
+    if (isPlayingRef.current) {
         frameRef.current = (frameRef.current + 1) % animationConfig.total_frames;
         const newProgress = frameRef.current / animationConfig.total_frames;
         onProgressChange(newProgress);
       } else {
-        frameRef.current = Math.floor(progress * animationConfig.total_frames);
+      frameRef.current = Math.floor(progressRef.current * animationConfig.total_frames);
       }
 
       renderOptimizedKleinBottles();
@@ -299,7 +312,8 @@ const OptimizedThreeJSVisualization: React.FC<OptimizedThreeJSVisualizationProps
     const finalPosition = new THREE.Vector3(0, 0, 0);
     
     // Calculate current positions and properties for each quark
-    currentPreset.quark_content.forEach((quark, i) => {
+    const preset = presetRef.current;
+    preset.quark_content.forEach((quark, i) => {
       // Position interpolation with phase-dependent easing
       let easingFactor = animationProgress;
       if (currentPhase === 'merger') {
@@ -313,11 +327,11 @@ const OptimizedThreeJSVisualization: React.FC<OptimizedThreeJSVisualizationProps
       const currentPos = initialPositions[i].clone().lerp(finalPosition, easingFactor);
       
       // Optimized scale evolution using physical parameters
-      const baseScale = currentPreset.optimized_parameters.scales[i];
+      const baseScale = preset.optimized_parameters.scales[i];
       const scale = baseScale * (1 - animationProgress * 0.7);
       
       // Energy-derived rotation angle
-      const baseRotationSpeed = currentPreset.optimized_parameters.rotation_speeds[i];
+      const baseRotationSpeed = preset.optimized_parameters.rotation_speeds[i];
       const rotationAngle = showRotation ? baseRotationSpeed * frameRef.current * (1 - animationProgress) : 0;
       
       // Create optimized Klein bottle geometry
@@ -359,7 +373,7 @@ const OptimizedThreeJSVisualization: React.FC<OptimizedThreeJSVisualizationProps
       
       // Material with quark color and optimized properties
       const material = new THREE.MeshBasicMaterial({
-        color: currentPreset.colors[i],
+        color: preset.colors[i],
         wireframe: true,
         transparent: true,
         opacity: 0.6,
@@ -370,10 +384,10 @@ const OptimizedThreeJSVisualization: React.FC<OptimizedThreeJSVisualizationProps
       kleinBottleGroupRef.current!.add(mesh);
       
       // Add optimized flux vectors if enabled
-      if (showFlux) {
-        const baseArrowCount = currentPreset.optimized_parameters.num_arrows[i];
+      if (showFluxRef.current) {
+        const baseArrowCount = preset.optimized_parameters.num_arrows[i];
         const numArrows = Math.floor(baseArrowCount * (1 - animationProgress * 0.5));
-        const baseFluxLength = currentPreset.optimized_parameters.flux_lengths[i];
+        const baseFluxLength = preset.optimized_parameters.flux_lengths[i];
         const fluxLength = baseFluxLength * 20 * (1 - animationProgress * 0.3); // Scale up for visibility
         
         for (let j = 0; j < numArrows; j++) {
@@ -382,7 +396,7 @@ const OptimizedThreeJSVisualization: React.FC<OptimizedThreeJSVisualizationProps
           const pos = kleinBottle(randU, randV, scale, currentPos, 0);
           
           // Direction based on charge sign and electromagnetic field
-          const chargeSign = Math.sign(currentPreset.charge_values[i]);
+          const chargeSign = Math.sign(preset.charge_values[i]);
           const dir = new THREE.Vector3(
             Math.sin(randV) * (1 - animationProgress) * chargeSign,
             Math.cos(randU) * (1 - animationProgress) * chargeSign,
@@ -392,7 +406,7 @@ const OptimizedThreeJSVisualization: React.FC<OptimizedThreeJSVisualizationProps
           // Optimized arrow geometry
           const arrowGeometry = new THREE.ConeGeometry(0.02, fluxLength * 0.3, 8);
           const arrowMaterial = new THREE.MeshBasicMaterial({ 
-            color: currentPreset.colors[i],
+            color: preset.colors[i],
             transparent: true,
             opacity: 0.8
           });

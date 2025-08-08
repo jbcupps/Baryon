@@ -273,9 +273,9 @@ const AdvancedControlsPanel: React.FC<AdvancedControlsPanelProps> = ({
               <ChevronDown className="w-4 h-4" />
             )}
           </CardTitle>
-          <CardDescription>
-            Mesh deformation and fluid dynamics parameters
-          </CardDescription>
+           <CardDescription>
+             Mesh deformation and fluid dynamics overlays (base manifold remains formula-derived)
+           </CardDescription>
         </CardHeader>
         
         {expandedSections.physics && (

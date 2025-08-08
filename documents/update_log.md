@@ -40,3 +40,17 @@
 ## Paper Integration (Mathematics & Topology)
 - Added `components/bordism-eta-demo.tsx`: interactive η-invariant demo mapping to Ω₄^{Pin⁻} ≅ Z/16Z per Bordism paper.
 - Linked demo inside `components/math-formulas.tsx` and corrected focus to 4D Pin⁻ bordism classes with η-based explanation.
+
+## Build Fix: Remove undefined `props` usage in `three-js-visualization.tsx`
+- Replaced `props?.dsimTimeStep` and `(props as any)?.dsimDensityRate` with destructured optional props `dsimTimeStep` and `dsimDensityRate`.
+- Updated component signature to destructure `dsimDensityRate`, `dsimProximityThreshold`, and `dsimTimeStep` from `ThreeJSVisualization` props.
+- This resolves the Next.js TypeScript build error: "Cannot find name 'props'" during Docker image build.
+- Verified by rebuilding containers with `docker compose up -d --build`; app container now builds and starts successfully.
+
+## Visualization Integrity: Separate Manifold vs Overlays
+- Ensured the base wireframe geometry is strictly formula-derived (Klein bottle parametric equations) and unaffected by fluid/physics deformations.
+- In `enhanced-three-js-visualization.tsx`, removed deformation application inside the manifold point computation. Overlays (deformation ripples, necking, fluid vectors, stress) are now rendered in separate groups.
+- Rotation now scales by `holonomyStrength` from controls; confinement scale uses `confinementScale` control directly (no hidden multipliers).
+- Set default `showDeformation` to false in `enhanced-skb-visualization-app.tsx` so users see pure manifolds by default.
+- Updated `advanced-controls-panel.tsx` description to clarify overlays vs base manifold.
+- Rebuilt Docker image and verified app starts successfully.

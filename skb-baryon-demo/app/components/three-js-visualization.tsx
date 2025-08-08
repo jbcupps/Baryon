@@ -11,6 +11,11 @@ interface ThreeJSVisualizationProps {
   onProgressChange: (progress: number) => void;
   showFlux: boolean;
   showRotation: boolean;
+
+  // DSIM parameters (optional)
+  dsimDensityRate?: number;
+  dsimProximityThreshold?: number;
+  dsimTimeStep?: number;
 }
 
 const ThreeJSVisualization: React.FC<ThreeJSVisualizationProps> = ({
@@ -19,7 +24,10 @@ const ThreeJSVisualization: React.FC<ThreeJSVisualizationProps> = ({
   progress,
   onProgressChange,
   showFlux,
-  showRotation
+  showRotation,
+  dsimDensityRate,
+  dsimProximityThreshold,
+  dsimTimeStep
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene>();
@@ -29,6 +37,8 @@ const ThreeJSVisualization: React.FC<ThreeJSVisualizationProps> = ({
   const animationIdRef = useRef<number>();
   const kleinBottleGroupRef = useRef<THREE.Group>();
   const fluxGroupRef = useRef<THREE.Group>();
+
+  // NOTE: refs are declared after we compute currentPreset
 
   // Optimized preset configurations with verified optimal parameters
   const presets = {
@@ -76,6 +86,19 @@ const ThreeJSVisualization: React.FC<ThreeJSVisualizationProps> = ({
 
   const currentPreset = presets[selectedPreset as keyof typeof presets];
 
+  // Keep latest control values available inside the animation loop
+  const isPlayingRef = useRef<boolean>(isPlaying);
+  const progressRef = useRef<number>(progress);
+  const showFluxRef = useRef<boolean>(showFlux);
+  const showRotationRef = useRef<boolean>(showRotation);
+  const presetRef = useRef<typeof currentPreset>(currentPreset);
+
+  useEffect(() => { isPlayingRef.current = isPlaying; }, [isPlaying]);
+  useEffect(() => { progressRef.current = progress; }, [progress]);
+  useEffect(() => { showFluxRef.current = showFlux; }, [showFlux]);
+  useEffect(() => { showRotationRef.current = showRotation; }, [showRotation]);
+  useEffect(() => { presetRef.current = currentPreset; }, [selectedPreset, currentPreset]);
+
   // Klein bottle parametric function (extracted from mathematical data)
   const kleinBottle = (u: number, v: number, scale: number, offset: THREE.Vector3, rotationAngle: number = 0): THREE.Vector3 => {
     let x = (2 + Math.cos(u/2) * Math.sin(v) - Math.sin(u/2) * Math.sin(2*v)) * Math.cos(u) * scale;
@@ -83,7 +106,7 @@ const ThreeJSVisualization: React.FC<ThreeJSVisualizationProps> = ({
     let z = (Math.sin(u/2) * Math.sin(v) + Math.cos(u/2) * Math.sin(2*v)) * scale;
     
     // Apply rotation for energy-as-motion
-    if (rotationAngle !== 0 && showRotation) {
+    if (rotationAngle !== 0 && showRotationRef.current) {
       const cosRot = Math.cos(rotationAngle);
       const sinRot = Math.sin(rotationAngle);
       const newX = x * cosRot - y * sinRot;
@@ -190,13 +213,14 @@ const ThreeJSVisualization: React.FC<ThreeJSVisualizationProps> = ({
       camera.position.z = radius * Math.cos(currentRotation.y) * Math.cos(currentRotation.x);
       camera.lookAt(0, 0, 0);
 
-      // Update animation frame
-      if (isPlaying) {
-        frameRef.current = (frameRef.current + 1) % 100;
+      // Update animation frame (scaled by DSIM dt)
+      if (isPlayingRef.current) {
+        const step = Math.max(1, Math.floor((dsimTimeStep ?? 1.0)));
+        frameRef.current = (frameRef.current + step) % 100;
         const newProgress = frameRef.current / 100;
         onProgressChange(newProgress);
       } else {
-        frameRef.current = Math.floor(progress * 100);
+        frameRef.current = Math.floor(progressRef.current * 100);
       }
 
       renderKleinBottles();
@@ -254,20 +278,21 @@ const ThreeJSVisualization: React.FC<ThreeJSVisualizationProps> = ({
     const finalPosition = new THREE.Vector3(0, 0, 0);
     
     // Calculate current positions and properties using analytical derivations
-    currentPreset.quark_content.forEach((quark, i) => {
+    const preset = presetRef.current;
+    preset.quark_content.forEach((quark, i) => {
       // Position interpolation
       const currentPos = initialPositions[i].clone().lerp(finalPosition, animationProgress);
       
       // CTC-based scale evolution with linear decrease during merger
       // scale_q = initial_scale_q × (1 - progress) + final_merged_scale × progress
-      const initial_scale = 0.6 * currentPreset.ctc_scales[i]; // Base scale modified by CTC factor
+      const initial_scale = 0.6 * preset.ctc_scales[i]; // Base scale modified by CTC factor
       const final_scale = 0.3; // Merged state scale
       const scale = initial_scale * (1 - animationProgress) + final_scale * animationProgress;
       
       // Energy rotation with verified optimal parameters: 0.1 * frame * (1 - progress) * mass_ratio[i]
       // Using inverted mass ratio for speed scaling: [1.0, 2.09, 2.09] for different quark types
-      const rotationAngle = showRotation ? 
-        currentPreset.base_rotation_speed * frameRef.current * (1 - animationProgress) * currentPreset.rotation_mass_ratios[i] : 0;
+      const rotationAngle = showRotationRef.current ? 
+        preset.base_rotation_speed * frameRef.current * (1 - animationProgress) * preset.rotation_mass_ratios[i] : 0;
       
       // Create Klein bottle geometry
       const geometry = new THREE.BufferGeometry();
@@ -309,7 +334,7 @@ const ThreeJSVisualization: React.FC<ThreeJSVisualizationProps> = ({
       
       // Enhanced material with vibrant QCD colors for educational clarity
       const material = new THREE.MeshBasicMaterial({
-        color: currentPreset.colors[i],
+        color: preset.colors[i],
         wireframe: true,
         transparent: true,
         opacity: 0.8, // Increased opacity for better color visibility
@@ -320,13 +345,14 @@ const ThreeJSVisualization: React.FC<ThreeJSVisualizationProps> = ({
       kleinBottleGroupRef.current!.add(mesh);
       
       // Add flux vectors if enabled (using verified optimal parameters)
-      if (showFlux) {
+      if (showFluxRef.current) {
         // Verified optimal flux arrows per quark: [7, 3, 3] with merger reduction
-        const baseArrows = currentPreset.num_arrows[i];
-        const numArrows = Math.floor(baseArrows * (1 - animationProgress * 0.6));
+        const baseArrows = preset.num_arrows[i];
+        const densityMult = Math.max(0.25, Math.min(3, (dsimDensityRate ?? 10) / 20));
+        const numArrows = Math.floor(baseArrows * (1 - animationProgress * 0.6) * densityMult);
         
         // Verified optimal flux lengths: [0.33, 0.17, 0.17] with confinement reduction
-        const baseLength = currentPreset.flux_lengths[i];
+        const baseLength = preset.flux_lengths[i];
         const fluxLength = baseLength * (1 - animationProgress * 0.4) * scale;
         
         for (let j = 0; j < numArrows; j++) {
@@ -341,7 +367,7 @@ const ThreeJSVisualization: React.FC<ThreeJSVisualizationProps> = ({
           ).normalize();
           
           const arrowGeometry = new THREE.ConeGeometry(0.02, fluxLength * 0.3, 8);
-          const arrowMaterial = new THREE.MeshBasicMaterial({ color: currentPreset.colors[i] });
+          const arrowMaterial = new THREE.MeshBasicMaterial({ color: preset.colors[i] });
           const arrow = new THREE.Mesh(arrowGeometry, arrowMaterial);
           
           arrow.position.copy(pos);

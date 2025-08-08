@@ -30,6 +30,11 @@ export interface VisualizationState {
   showNecking: boolean;
   showFluidDynamics: boolean; // New toggle for fluid dynamics
 
+  // DSIM parameters
+  dsimDensityRate: number; // fluctuations per step
+  dsimProximityThreshold: number; // gluing distance
+  dsimTimeStep: number; // dt multiplier
+
   // Real-time data from visualization
   confinementData: any;
   physicsData: any;
@@ -61,6 +66,11 @@ interface VisualizationContextType {
   setShowFluidFlow: (show: boolean) => void;
   setShowNecking: (show: boolean) => void;
   setShowFluidDynamics: (show: boolean) => void; // New toggle
+
+  // DSIM setters
+  setDsimDensityRate: (value: number) => void;
+  setDsimProximityThreshold: (value: number) => void;
+  setDsimTimeStep: (value: number) => void;
   
   // Real-time data updates
   handleConfinementUpdate: (data: any) => void;
@@ -91,6 +101,11 @@ export const VisualizationProvider: React.FC<VisualizationProviderProps> = ({ ch
     progress: 0,
     showFlux: true,
     showRotation: true,
+
+    // DSIM defaults (aligned with DSIM spec)
+    dsimDensityRate: 10,
+    dsimProximityThreshold: 1.5,
+    dsimTimeStep: 1.0,
 
     // Advanced physics parameters
     physicsParams: {
@@ -168,6 +183,19 @@ export const VisualizationProvider: React.FC<VisualizationProviderProps> = ({ ch
 
   const setShowRotation = useCallback((show: boolean) => {
     setState(prev => ({ ...prev, showRotation: show }));
+  }, []);
+
+  // DSIM setters
+  const setDsimDensityRate = useCallback((value: number) => {
+    setState(prev => ({ ...prev, dsimDensityRate: value }));
+  }, []);
+
+  const setDsimProximityThreshold = useCallback((value: number) => {
+    setState(prev => ({ ...prev, dsimProximityThreshold: value }));
+  }, []);
+
+  const setDsimTimeStep = useCallback((value: number) => {
+    setState(prev => ({ ...prev, dsimTimeStep: value }));
   }, []);
 
   // Advanced physics setter
@@ -250,6 +278,9 @@ export const VisualizationProvider: React.FC<VisualizationProviderProps> = ({ ch
     setProgress,
     setShowFlux,
     setShowRotation,
+    setDsimDensityRate,
+    setDsimProximityThreshold,
+    setDsimTimeStep,
 
     // Advanced controls
     setPhysicsParams,
