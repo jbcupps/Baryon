@@ -1,5 +1,15 @@
 # Project Update Log
 
+2025-08-08
+- Implemented Phase B: DSIM simulation logic in `DSIM_Simulation/src/dsim/environment.py`.
+  - Added `generate_fluctuations` using Poisson process with configurable flavor ratios. [Theory: stochastic vacuum fluctuations]
+  - Implemented `identify_configurations` using `scipy.spatial.distance.pdist/squareform` and greedy triplet selection within a proximity threshold. [Theory: topological pushout/locality]
+  - Added `check_CCP` enforcing Z3 color-holonomy neutrality (sum % 3 == 0), registering `baryon_id`, persisting stabilized composites. [Theory: Axiom 2 (CCP)/confinement]
+  - Implemented `propagate_worldtubes` with Brownian kinematics to realize sequential colimit persistence between time steps. [Theory: Axiom 3 (Emergent Persistence)]
+  - Added `cleanup_pool` for removing stabilized/expired instantons.
+  - Implemented `evolve_system` main loop with correct operation sequence.
+  - Added structured logging and history recording for reproducibility.
+
 ## Initial Refactor for CI/CD
 - Added Docker and Docker Compose setup.
 - Configured GitHub Actions for CI/CD.
