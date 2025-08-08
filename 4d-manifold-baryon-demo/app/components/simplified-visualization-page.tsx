@@ -32,10 +32,10 @@ const SimplifiedVisualizationPage: React.FC = () => {
   } = useVisualization();
 
   // Local camera control state
-  const [cameraDistance, setCameraDistance] = React.useState<number>(10);
+  const [cameraDistance, setCameraDistance] = React.useState<number>(8);
   const [cameraRotX, setCameraRotX] = React.useState<number>(0);
   const [cameraRotY, setCameraRotY] = React.useState<number>(0);
-  const [cameraFov, setCameraFov] = React.useState<number>(75);
+  const [cameraFov, setCameraFov] = React.useState<number>(70);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">

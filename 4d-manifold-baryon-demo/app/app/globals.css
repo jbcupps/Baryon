@@ -81,7 +81,22 @@
 }
 
 .math-formula {
-  @apply my-2 text-center;
+  /* Prevent KaTeX content from overflowing cards */
+  @apply my-2 text-center max-w-full overflow-x-auto inline-block px-2;
+}
+
+/* Tame KaTeX display blocks so they scroll horizontally instead of overlapping */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Slightly reduce KaTeX font-size to fit better in narrow side cards */
+.katex { font-size: 0.95rem; }
+
+@media (max-width: 1024px) {
+  .katex { font-size: 0.9rem; }
 }
 
 .quark-info {

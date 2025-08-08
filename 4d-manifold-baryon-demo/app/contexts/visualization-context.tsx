@@ -103,32 +103,32 @@ export const VisualizationProvider: React.FC<VisualizationProviderProps> = ({ ch
     showRotation: true,
 
     // DSIM defaults (aligned with DSIM spec)
-    dsimDensityRate: 10,
-    dsimProximityThreshold: 2.5,
-    dsimTimeStep: 1.0,
+    dsimDensityRate: 15,
+    dsimProximityThreshold: 2.0,
+    dsimTimeStep: 1.5,
 
     // Advanced physics parameters
     physicsParams: {
-      deformationIntensity: 0.5,
+      deformationIntensity: 0.6,
       fluidViscosity: 0.3,
-      elasticModulus: 0.4,
-      vertexStiffness: 0.2,
-      dampingFactor: 0.8,
-      proximityThreshold: 0.5,
-      neckingStrength: 0.3,
-      bridgeFormation: 0.4,
-      surfaceTension: 0.2,
+      elasticModulus: 0.35,
+      vertexStiffness: 0.25,
+      dampingFactor: 0.75,
+      proximityThreshold: 0.8,
+      neckingStrength: 0.6,
+      bridgeFormation: 0.6,
+      surfaceTension: 0.15,
       timeStep: 0.016,
       maxDeformation: 1.0
     },
 
     // Color confinement parameters
     confinementParams: {
-      holonomyStrength: 1.0,
+      holonomyStrength: 1.2,
       pinMinusField: 0.8,
       bordismClass: 0,
-      fluxTubeStrength: 0.6,
-      confinementScale: 1.2
+      fluxTubeStrength: 0.8,
+      confinementScale: 1.3
     },
 
     // Fluid dynamics parameters (new)

@@ -11,6 +11,8 @@ import {
   Settings, 
   Eye, 
   Sliders,
+  BookOpenText,
+  Beaker,
   ArrowLeft,
   ArrowRight
 } from 'lucide-react';
@@ -24,6 +26,7 @@ const Navigation: React.FC = () => {
   
   const isVisualizationPage = pathname === '/';
   const isControlsPage = pathname === '/controls';
+  const isDocsPage = pathname?.startsWith('/docs');
 
   return (
     <div className="flex items-center gap-2">
@@ -47,6 +50,28 @@ const Navigation: React.FC = () => {
             <Link href="/">
               <Eye className="w-4 h-4" />
               <span className="hidden sm:inline">Visualization</span>
+            </Link>
+          </Button>
+        </ControlTooltip>
+
+        <ControlTooltip
+          title="Documentation"
+          description="Project docs and mathematical framework"
+          effect="Open the documentation section"
+          shortcut="D"
+        >
+          <Button
+            asChild
+            variant={isDocsPage ? "default" : "ghost"}
+            size="sm"
+            className={cn(
+              "gap-2 transition-all duration-200",
+              isDocsPage && "shadow-sm"
+            )}
+          >
+            <Link href="/docs">
+              <BookOpenText className="w-4 h-4" />
+              <span className="hidden sm:inline">Docs</span>
             </Link>
           </Button>
         </ControlTooltip>

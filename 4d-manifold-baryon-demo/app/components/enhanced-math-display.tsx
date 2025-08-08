@@ -145,7 +145,7 @@ const EnhancedMathDisplay: React.FC<EnhancedMathDisplayProps> = ({
 
               <Separator />
 
-              <div className="bg-blue-50 p-3 rounded">
+              <div className="bg-blue-50 p-3 rounded overflow-x-auto">
                 <h4 className="font-semibold text-blue-800 mb-2">Holonomy Product:</h4>
                 <div className="font-mono text-sm space-y-1">
                   <div>Real part: {holonomyProduct.real.toFixed(6)}</div>
