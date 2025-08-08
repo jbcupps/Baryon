@@ -209,7 +209,7 @@ const OptimizedControlPanel: React.FC<OptimizedControlPanelProps> = ({
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button
               onClick={() => setIsPlaying(!isPlaying)}
               variant={isPlaying ? "default" : "outline"}
@@ -230,7 +230,7 @@ const OptimizedControlPanel: React.FC<OptimizedControlPanelProps> = ({
             <Button
               onClick={handleReset}
               variant="outline"
-              className="control-button"
+              className="control-button flex-shrink-0"
             >
               <RotateCcw className="w-4 h-4" />
             </Button>

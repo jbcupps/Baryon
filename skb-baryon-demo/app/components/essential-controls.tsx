@@ -96,7 +96,7 @@ const EssentialControls: React.FC<EssentialControlsProps> = ({
 
         {/* Animation Controls */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <ControlTooltip
               title="Animation Controls"
               description="Control the baryon formation animation playback"
@@ -105,7 +105,7 @@ const EssentialControls: React.FC<EssentialControlsProps> = ({
               <Label className="text-sm font-medium cursor-help">Animation</Label>
             </ControlTooltip>
 
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 flex-shrink-0">
               <ControlTooltip
                 title={isPlaying ? "Pause Animation" : "Play Animation"}
                 description={isPlaying ? "Pause the baryon formation process" : "Start the baryon formation animation"}

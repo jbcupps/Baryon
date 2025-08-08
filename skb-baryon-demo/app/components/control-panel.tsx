@@ -156,7 +156,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 pt-0">
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <ControlTooltip
               title={isPlaying ? "Pause Animation" : "Play Animation"}
               description={isPlaying ? "Pause the automatic baryon formation process" : "Start the automatic baryon formation animation"}
@@ -181,7 +181,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
               <Button
                 onClick={handleReset}
                 variant="outline"
-                className="control-button cursor-help"
+                className="control-button cursor-help flex-shrink-0"
               >
                 <RotateCcw className="w-4 h-4" />
               </Button>

@@ -100,6 +100,11 @@
   @apply transition-all duration-200 hover:shadow-md;
 }
 
+/* Ensure control rows wrap on narrow screens and buttons don't overflow */
+.control-row {
+  @apply flex flex-wrap gap-2 items-center;
+}
+
 /* Table styling for analysis sections */
 .analysis-table {
   @apply w-full border-collapse text-sm;
