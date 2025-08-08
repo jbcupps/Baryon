@@ -51,6 +51,14 @@ interface AdvancedControlsPanelProps {
   bordismClass: 0 | 1;
   isColorNeutral: boolean;
   deformationMagnitude: number;
+
+  // DSIM coupling (to align UI with DSIM physics)
+  dsimDensityRate?: number;
+  setDsimDensityRate?: (value: number) => void;
+  dsimProximityThreshold?: number;
+  setDsimProximityThreshold?: (value: number) => void;
+  dsimTimeStep?: number;
+  setDsimTimeStep?: (value: number) => void;
 }
 
 const AdvancedControlsPanel: React.FC<AdvancedControlsPanelProps> = ({
@@ -70,6 +78,13 @@ const AdvancedControlsPanel: React.FC<AdvancedControlsPanelProps> = ({
   bordismClass,
   isColorNeutral,
   deformationMagnitude
+  ,
+  dsimDensityRate,
+  setDsimDensityRate,
+  dsimProximityThreshold,
+  setDsimProximityThreshold,
+  dsimTimeStep,
+  setDsimTimeStep
 }) => {
   const [expandedSections, setExpandedSections] = React.useState({
     confinement: true,
@@ -107,6 +122,11 @@ const AdvancedControlsPanel: React.FC<AdvancedControlsPanelProps> = ({
       fluxTubeStrength: 0.6,
       confinementScale: 1.2
     });
+
+    // DSIM defaults (if provided)
+    if (setDsimDensityRate) setDsimDensityRate(10);
+    if (setDsimProximityThreshold) setDsimProximityThreshold(1.5);
+    if (setDsimTimeStep) setDsimTimeStep(1.0);
   };
 
   return (
@@ -256,16 +276,16 @@ const AdvancedControlsPanel: React.FC<AdvancedControlsPanelProps> = ({
         )}
       </Card>
 
-      {/* Advanced Physics Controls */}
+      {/* DSIM Simulation Controls (aligns UI with DSIM physics loop) */}
       <Card className="scientific-panel">
         <CardHeader 
-          className="cursor-pointer pb-3"
-          onClick={() => toggleSection('physics')}
+          className="cursor-pointer pb-3" 
+          onClick={() => toggleSection('physics')} // reuse toggle grouping
         >
           <CardTitle className="flex items-center justify-between text-lg">
             <div className="flex items-center gap-2">
-              <Waves className="w-4 h-4" />
-              Physics Dynamics
+              <Settings2 className="w-4 h-4" />
+              DSIM Simulation
             </div>
             {expandedSections.physics ? (
               <ChevronUp className="w-4 h-4" />
@@ -273,97 +293,61 @@ const AdvancedControlsPanel: React.FC<AdvancedControlsPanelProps> = ({
               <ChevronDown className="w-4 h-4" />
             )}
           </CardTitle>
-           <CardDescription>
-             Mesh deformation and fluid dynamics overlays (base manifold remains formula-derived)
-           </CardDescription>
+          <CardDescription>
+            Fluctuation density, locality threshold, and time stepping
+          </CardDescription>
         </CardHeader>
-        
         {expandedSections.physics && (
           <CardContent className="space-y-4 pt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <ControlTooltip
-                  title="Deformation Intensity"
-                  description="Controls how much the Klein bottle mesh deforms during quark interactions"
-                  range="0.0 - 2.0"
-                  effect="Higher values create more dramatic visual deformation of the 3D surface"
-                  shortcut="D"
+                  title="Fluctuation Density (λ)"
+                  description="Poisson rate controlling number of instanton fluctuations per step"
+                  range="0 - 40"
+                  effect="Higher λ increases spawn rate of Kq events (u:d ratio set elsewhere)"
+                  shortcut="L"
                 >
                   <Label className="flex items-center gap-2 mb-2 cursor-help">
                     <HelpCircle className="w-3 h-3 text-slate-400" />
-                    Deformation
+                    Density λ
                     <Badge variant="outline" className="text-xs ml-auto">
-                      {physicsParams.deformationIntensity.toFixed(2)}
+                      {(dsimDensityRate ?? 10).toFixed(1)}
                     </Badge>
                   </Label>
                 </ControlTooltip>
                 <Slider
-                  value={[physicsParams.deformationIntensity]}
-                  onValueChange={([value]) => 
-                    setPhysicsParams({...physicsParams, deformationIntensity: value})
-                  }
+                  value={[dsimDensityRate ?? 10]}
+                  onValueChange={([value]) => setDsimDensityRate && setDsimDensityRate(value)}
                   min={0}
-                  max={2}
-                  step={0.1}
+                  max={40}
+                  step={1}
                   className="w-full"
                 />
               </div>
 
               <div>
                 <MathTooltip
-                  formula="η = μ(∂u/∂y + ∂v/∂x)"
-                  explanation="Fluid viscosity parameter controlling resistance to deformation flow"
+                  formula="\n  d_{ij} \le r_0\n"
+                  explanation="Locality threshold r₀ used to identify gluable triplets (Pushout)"
                   variables={[
-                    { symbol: "η", meaning: "Dynamic viscosity coefficient" },
-                    { symbol: "μ", meaning: "Viscosity parameter" },
-                    { symbol: "u,v", meaning: "Velocity field components" }
+                    { symbol: 'd_{ij}', meaning: 'Pairwise separations' },
+                    { symbol: 'r₀', meaning: 'Locality (proximity) threshold' }
                   ]}
                 >
                   <Label className="flex items-center gap-2 mb-2 cursor-help">
                     <HelpCircle className="w-3 h-3 text-slate-400" />
-                    Viscosity η
+                    Locality r₀
                     <Badge variant="outline" className="text-xs ml-auto">
-                      {physicsParams.fluidViscosity.toFixed(2)}
+                      {(dsimProximityThreshold ?? 1.5).toFixed(2)}
                     </Badge>
                   </Label>
                 </MathTooltip>
                 <Slider
-                  value={[physicsParams.fluidViscosity]}
-                  onValueChange={([value]) => 
-                    setPhysicsParams({...physicsParams, fluidViscosity: value})
-                  }
-                  min={0}
-                  max={1}
-                  step={0.05}
-                  className="w-full"
-                />
-              </div>
-
-              <div>
-                <MathTooltip
-                  formula="E = σ/ε"
-                  explanation="Elastic modulus defining material stiffness and stress-strain relationship"
-                  variables={[
-                    { symbol: "E", meaning: "Young's modulus (GPa)" },
-                    { symbol: "σ", meaning: "Applied stress" },
-                    { symbol: "ε", meaning: "Resulting strain" }
-                  ]}
-                >
-                  <Label className="flex items-center gap-2 mb-2 cursor-help">
-                    <HelpCircle className="w-3 h-3 text-slate-400" />
-                    Elastic E
-                    <Badge variant="outline" className="text-xs ml-auto">
-                      {physicsParams.elasticModulus.toFixed(2)}
-                    </Badge>
-                  </Label>
-                </MathTooltip>
-                <Slider
-                  value={[physicsParams.elasticModulus]}
-                  onValueChange={([value]) => 
-                    setPhysicsParams({...physicsParams, elasticModulus: value})
-                  }
-                  min={0}
-                  max={1}
+                  value={[dsimProximityThreshold ?? 1.5]}
+                  onValueChange={([value]) => setDsimProximityThreshold && setDsimProximityThreshold(value)}
+                  min={0.5}
+                  max={3.0}
                   step={0.05}
                   className="w-full"
                 />
@@ -371,116 +355,37 @@ const AdvancedControlsPanel: React.FC<AdvancedControlsPanelProps> = ({
 
               <div>
                 <ControlTooltip
-                  title="Necking Strength"
-                  description="Controls formation of topological bridges between approaching quarks during merger"
-                  range="0.0 - 1.0"
-                  effect="Higher values create stronger connections between merging Klein bottles"
-                  shortcut="N"
+                  title="Time Step (dt)"
+                  description="Scales animation/evolution timing to match DSIM dt"
+                  range="0.25 - 4.0"
+                  effect="Larger dt advances frames faster; also used in worldtube propagation"
+                  shortcut="T"
                 >
                   <Label className="flex items-center gap-2 mb-2 cursor-help">
                     <HelpCircle className="w-3 h-3 text-slate-400" />
-                    Necking
+                    Time Step dt
                     <Badge variant="outline" className="text-xs ml-auto">
-                      {physicsParams.neckingStrength.toFixed(2)}
+                      {(dsimTimeStep ?? 1.0).toFixed(2)}
                     </Badge>
                   </Label>
                 </ControlTooltip>
                 <Slider
-                  value={[physicsParams.neckingStrength]}
-                  onValueChange={([value]) => 
-                    setPhysicsParams({...physicsParams, neckingStrength: value})
-                  }
-                  min={0}
-                  max={1}
-                  step={0.05}
+                  value={[dsimTimeStep ?? 1.0]}
+                  onValueChange={([value]) => setDsimTimeStep && setDsimTimeStep(value)}
+                  min={0.25}
+                  max={4}
+                  step={0.25}
                   className="w-full"
                 />
               </div>
-
-              <div>
-                <MathTooltip
-                  formula="γ = ∂F/∂A"
-                  explanation="Surface tension energy per unit area, causing surfaces to minimize area"
-                  variables={[
-                    { symbol: "γ", meaning: "Surface tension (N/m)" },
-                    { symbol: "F", meaning: "Free energy" },
-                    { symbol: "A", meaning: "Surface area" }
-                  ]}
-                >
-                  <Label className="flex items-center gap-2 mb-2 cursor-help">
-                    <HelpCircle className="w-3 h-3 text-slate-400" />
-                    Tension γ
-                    <Badge variant="outline" className="text-xs ml-auto">
-                      {physicsParams.surfaceTension.toFixed(2)}
-                    </Badge>
-                  </Label>
-                </MathTooltip>
-                <Slider
-                  value={[physicsParams.surfaceTension]}
-                  onValueChange={([value]) => 
-                    setPhysicsParams({...physicsParams, surfaceTension: value})
-                  }
-                  min={0}
-                  max={1}
-                  step={0.05}
-                  className="w-full"
-                />
-              </div>
-
-              <div>
-                <ControlTooltip
-                  title="Damping Factor"
-                  description="Energy dissipation parameter that stabilizes oscillations and prevents runaway deformation"
-                  range="0.0 - 1.0"
-                  effect="Higher values provide stronger damping, leading to more stable animations"
-                  shortcut="F"
-                >
-                  <Label className="flex items-center gap-2 mb-2 cursor-help">
-                    <HelpCircle className="w-3 h-3 text-slate-400" />
-                    Damping
-                    <Badge variant="outline" className="text-xs ml-auto">
-                      {physicsParams.dampingFactor.toFixed(2)}
-                    </Badge>
-                  </Label>
-                </ControlTooltip>
-                <Slider
-                  value={[physicsParams.dampingFactor]}
-                  onValueChange={([value]) => 
-                    setPhysicsParams({...physicsParams, dampingFactor: value})
-                  }
-                  min={0}
-                  max={1}
-                  step={0.05}
-                  className="w-full"
-                />
-              </div>
-            </div>
-
-            <Separator />
-
-            <div className="flex gap-2">
-              <ControlTooltip
-                title="Reset to Defaults"
-                description="Restore all physics parameters to their optimal default values for stable visualization"
-                effect="Resets all sliders to scientifically validated default parameters"
-                shortcut="Ctrl+R"
-              >
-                <Button
-                  onClick={resetToDefaults}
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                >
-                  <RotateCcw className="w-4 h-4 mr-2" />
-                  Reset Defaults
-                </Button>
-              </ControlTooltip>
             </div>
           </CardContent>
         )}
       </Card>
 
-      {/* Advanced Visualization Options */}
+      {/* Advanced Physics Controls removed: not directly tied to hypothesis dynamics */}
+
+      {/* Advanced Visualization Options (only keep Necking related to pushout visualization) */}
       <Card className="scientific-panel">
         <CardHeader 
           className="cursor-pointer pb-3"
@@ -505,69 +410,6 @@ const AdvancedControlsPanel: React.FC<AdvancedControlsPanelProps> = ({
         {expandedSections.visualization && (
           <CardContent className="space-y-4 pt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-center justify-between">
-                <ControlTooltip
-                  title="Mesh Deformation"
-                  description="Real-time vertex-level deformation of Klein bottle surfaces during quark interactions"
-                  effect="Shows how the topological structure responds to proximity forces and confinement"
-                  shortcut="M"
-                >
-                  <Label className="flex items-center gap-2 cursor-help">
-                    <Waves className="w-4 h-4" />
-                    Mesh Deformation
-                    <HelpCircle className="w-3 h-3 text-slate-400 ml-1" />
-                  </Label>
-                </ControlTooltip>
-                <Switch
-                  checked={showDeformation}
-                  onCheckedChange={setShowDeformation}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <MathTooltip
-                  formula="σᵢⱼ = λδᵢⱼtr(ε) + 2μεᵢⱼ"
-                  explanation="Stress tensor field visualization showing internal forces within the Klein bottle material"
-                  variables={[
-                    { symbol: "σᵢⱼ", meaning: "Stress tensor components" },
-                    { symbol: "εᵢⱼ", meaning: "Strain tensor components" },
-                    { symbol: "λ,μ", meaning: "Lamé parameters" }
-                  ]}
-                >
-                  <Label className="flex items-center gap-2 cursor-help">
-                    <Activity className="w-4 h-4" />
-                    Stress Tensor
-                    <HelpCircle className="w-3 h-3 text-slate-400 ml-1" />
-                  </Label>
-                </MathTooltip>
-                <Switch
-                  checked={showStressTensor}
-                  onCheckedChange={setShowStressTensor}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <MathTooltip
-                  formula="v = ∇ × ψ"
-                  explanation="Fluid flow vector field showing velocity and vorticity patterns in deforming material"
-                  variables={[
-                    { symbol: "v", meaning: "Velocity field vector" },
-                    { symbol: "ψ", meaning: "Stream function" },
-                    { symbol: "∇ ×", meaning: "Curl operator (vorticity)" }
-                  ]}
-                >
-                  <Label className="flex items-center gap-2 cursor-help">
-                    <Zap className="w-4 h-4" />
-                    Fluid Vectors
-                    <HelpCircle className="w-3 h-3 text-slate-400 ml-1" />
-                  </Label>
-                </MathTooltip>
-                <Switch
-                  checked={showFluidFlow}
-                  onCheckedChange={setShowFluidFlow}
-                />
-              </div>
-
               <div className="flex items-center justify-between">
                 <ControlTooltip
                   title="Topological Necking"

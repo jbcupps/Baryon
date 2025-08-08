@@ -403,6 +403,24 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
     originalGeometriesRef.current = [];
     deformedGeometriesRef.current = [];
 
+    // DSIM locality threshold used to gate interactions ("touch" condition)
+    const localityThreshold = typeof dsimProximityThreshold === 'number' ? dsimProximityThreshold : 1.5;
+
+    // Determine color neutrality from CCP (Z3). CCP prevents causality issues by compensating phases.
+    const isColorNeutral = confinementData.isColorNeutral === true;
+
+    // Contact detection: manifolds share the same spacetime; when they touch, interaction must occur
+    let isTouching = false;
+    for (let i = 0; i < currentPositions.length; i++) {
+      for (let j = i + 1; j < currentPositions.length; j++) {
+        if (currentPositions[i].distanceTo(currentPositions[j]) <= localityThreshold) {
+          isTouching = true;
+          break;
+        }
+      }
+      if (isTouching) break;
+    }
+
     // Render enhanced Klein bottles with all effects
     currentPreset.quark_content.forEach((quark, i) => {
       const currentPos = currentPositions[i];
@@ -485,9 +503,10 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
       const mesh = new THREE.Mesh(geometry, material);
       kleinBottleGroupRef.current!.add(mesh);
       
-      // Enhanced flux vectors with confinement scaling (overlay)
-      if (showFlux) {
-        renderEnhancedFluxVectors(i, currentPos, confinementScale, rotationAngle, animationProgress);
+      // Flux vectors visualize compensating interactions upon contact (CCP). Always active when touching.
+      if (showFlux && isTouching) {
+        const ccpScale = isColorNeutral ? 1.0 : 0.6; // non-neutral tries to compensate but weaker coherent flux
+        renderEnhancedFluxVectors(i, currentPos, confinementScale, rotationAngle, animationProgress, ccpScale);
       }
       
       // Optionally render stress tensor visualization (overlay)
@@ -501,12 +520,25 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
       }
     });
     
-    // Render inter-quark connections (necking bridges)
-      const prox = typeof dsimProximityThreshold === 'number' ? dsimProximityThreshold : 1.5;
-      const proxNorm = Math.max(0, Math.min(1, (prox - 0.5) / (3.0 - 0.5)));
-      const neckingStart = 0.2 + 0.6 * proxNorm;
-      if (showNecking && animationProgress > neckingStart) {
-      renderNeckingBridges();
+    // Render inter-quark connections (necking bridges) upon contact within locality threshold.
+    const prox = localityThreshold;
+    const proxNorm = Math.max(0, Math.min(1, (prox - 0.5) / (3.0 - 0.5)));
+    const neckingStart = 0.2 + 0.6 * proxNorm;
+    if (showNecking && isTouching && animationProgress > neckingStart) {
+      // Additionally require that average pairwise distance is below threshold
+      const avgDistance = (() => {
+        let sum = 0; let n = 0;
+        for (let i = 0; i < currentPositions.length; i++) {
+          for (let j = i + 1; j < currentPositions.length; j++) {
+            sum += currentPositions[i].distanceTo(currentPositions[j]);
+            n++;
+          }
+        }
+        return n > 0 ? sum / n : Infinity;
+      })();
+      if (avgDistance <= prox) {
+        renderNeckingBridges(isColorNeutral ? 1.0 : 0.6); // non-neutral forms softer, partial bridges
+      }
     }
   };
 
@@ -516,17 +548,18 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
     position: THREE.Vector3,
     scale: number,
     rotationAngle: number,
-    progress: number
+    progress: number,
+    ccpScale: number = 1.0
   ) => {
     const holonomy = confinementData.holonomies[quarkIndex];
     if (!holonomy || !fluxGroupRef.current) return;
     
     const baseArrows = currentPreset.num_arrows[quarkIndex];
     const densityMult = Math.max(0.25, Math.min(3, (dsimDensityRate ?? 10) / 20));
-    const numArrows = Math.floor(baseArrows * (1 - progress * 0.6) * (1 + confinementData.confinementStrength * 0.5) * densityMult);
+    const numArrows = Math.floor(baseArrows * (1 - progress * 0.6) * (1 + confinementData.confinementStrength * 0.5) * densityMult * ccpScale);
     
     const baseLength = currentPreset.flux_lengths[quarkIndex];
-    const fluxLength = baseLength * (1 - progress * 0.4) * scale * confinementParams.fluxTubeStrength;
+    const fluxLength = baseLength * (1 - progress * 0.4) * scale * confinementParams.fluxTubeStrength * (0.8 + 0.4 * ccpScale);
     
     for (let j = 0; j < numArrows; j++) {
       const randU = Math.random() * 2 * Math.PI;
@@ -550,7 +583,7 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
       
       // Enhanced arrow with holonomy coloring
       const arrowGeometry = new THREE.ConeGeometry(
-        0.02 * (1 + confinementData.confinementStrength * 0.3), 
+        0.02 * (1 + confinementData.confinementStrength * 0.3) * (0.8 + 0.4 * ccpScale), 
         fluxLength * 0.4, 
         8
       );
@@ -565,7 +598,7 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
       const arrowMaterial = new THREE.MeshPhongMaterial({ 
         color: arrowColor,
         transparent: true,
-        opacity: 0.7 + confinementData.confinementStrength * 0.3
+        opacity: (0.7 + confinementData.confinementStrength * 0.3) * (0.7 + 0.3 * ccpScale)
       });
       const arrow = new THREE.Mesh(arrowGeometry, arrowMaterial);
       
@@ -648,7 +681,7 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
   };
 
   // Render necking bridges between quarks (as wireframe cylinders connecting manifolds)
-  const renderNeckingBridges = () => {
+  const renderNeckingBridges = (ccpScale: number = 1.0) => {
     if (!neckingGroupRef.current) return;
     
     // Create bridges between pairs of quarks
@@ -661,7 +694,7 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
           const bridgeDirection = currentPositions[j].clone().sub(currentPositions[i]).normalize();
           
           // Create bridge geometry (tube connecting the quarks)
-          const bridgeRadius = 0.1 * (1 - progress * 0.7) * physicsParams.neckingStrength;
+          const bridgeRadius = 0.1 * (1 - progress * 0.7) * physicsParams.neckingStrength * (0.8 + 0.4 * ccpScale);
           const bridgeLength = distance * 0.8;
           
           const bridgeGeometry = new THREE.CylinderGeometry(
@@ -674,7 +707,7 @@ const EnhancedThreeJSVisualization: React.FC<EnhancedThreeJSVisualizationProps> 
           const bridgeMaterial = new THREE.MeshPhongMaterial({
             color: new THREE.Color().setHSL(0.6, 0.5, 0.5),
             transparent: true,
-            opacity: 0.4 * physicsParams.neckingStrength,
+            opacity: 0.4 * physicsParams.neckingStrength * (0.8 + 0.4 * ccpScale),
             wireframe: true
           });
           

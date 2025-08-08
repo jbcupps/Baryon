@@ -69,7 +69,7 @@ const FourDManifoldVisualizationApp = () => {
           </TabsTrigger>
           <TabsTrigger value="about" className="flex items-center gap-2">
             <Info className="w-4 h-4" />
-            About SKB
+            About 4D Manifold
           </TabsTrigger>
         </TabsList>
 
@@ -100,7 +100,7 @@ const FourDManifoldVisualizationApp = () => {
                     3D Klein Bottle Merger Animation
                   </CardTitle>
                   <CardDescription>
-                    Mathematically accurate representation of sub-SKB (quark) merger dynamics
+                    Mathematically accurate representation of sub-4D Manifold (quark) merger dynamics
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -149,7 +149,7 @@ const FourDManifoldVisualizationApp = () => {
         <TabsContent value="about">
           <Card className="scientific-panel">
             <CardHeader>
-              <CardTitle>About the 4D Manifold Hypothesis</CardTitle>
+              <CardTitle>About 4D Manifold</CardTitle>
               <CardDescription>
                 The 4D Manifold hypothesis proposes that fundamental particles
                 are non-orientable topological defects in 4D spacetime. Unlike traditional
@@ -169,9 +169,9 @@ const FourDManifoldVisualizationApp = () => {
             </CardHeader>
             <CardContent className="prose prose-slate max-w-none">
               <p className="text-slate-700 leading-relaxed mb-4">
-                The Spacetime Klein Bottle (SKB) hypothesis proposes that fundamental particles 
+                The 4D Manifold hypothesis proposes that fundamental particles 
                 are non-orientable topological defects in 4D spacetime. Unlike traditional 
-                particle physics models, the SKB framework treats spacetime as the only 
+                particle physics models, the 4D Manifold framework treats spacetime as the only 
                 fundamental entity, with particles emerging as Klein bottle-shaped defects.
               </p>
               
@@ -187,13 +187,13 @@ const FourDManifoldVisualizationApp = () => {
               <p className="text-slate-700 leading-relaxed mb-4">
                 The theory uses advanced topological concepts including Pin⁻ structures, 
                 bordism theory, and quaternionic holonomy to predict particle properties. 
-                This visualization demonstrates how quarks (individual SKBs) merge to form 
+                This visualization demonstrates how quarks (individual 4D Manifolds) merge to form 
                 stable baryons through topologically constrained processes.
               </p>
 
               <h3 className="text-lg font-semibold mt-6 mb-3">Physical Predictions</h3>
               <p className="text-slate-700 leading-relaxed">
-                The SKB hypothesis successfully predicts quark charges, masses, and confinement 
+                The 4D Manifold hypothesis successfully predicts quark charges, masses, and confinement 
                 behavior. The merger animations show how color confinement emerges naturally 
                 from the requirement that only topologically compatible Klein bottles can 
                 exist in stable configurations.
@@ -203,6 +203,10 @@ const FourDManifoldVisualizationApp = () => {
         </TabsContent>
       </Tabs>
     </div>
+    {/* Close max-width container */}
+  </div>
+  {/* Close root container */}
+  </div>
   );
 };
 

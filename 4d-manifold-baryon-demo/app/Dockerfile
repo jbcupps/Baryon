@@ -1,4 +1,4 @@
-# Dockerfile for SKB Baryon Demo Next.js App
+# Dockerfile for 4D Manifold Baryon Demo (Next.js)
 
 # Use official Node.js LTS as base image
 FROM node:20-alpine AS base

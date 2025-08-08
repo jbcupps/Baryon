@@ -70,7 +70,9 @@
 }
 
 /* Custom styles for scientific visualization */
-.skb-container {
+/* Backward-compatible container class names during SKB → 4D Manifold rename */
+.skb-container,
+.four-d-manifold-container {
   @apply w-full max-w-7xl mx-auto px-4;
 }
 
@@ -120,7 +122,8 @@
 
 /* Responsive design utilities */
 @media (max-width: 768px) {
-  .skb-container {
+  .skb-container,
+  .four-d-manifold-container {
     @apply px-2;
   }
   

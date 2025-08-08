@@ -10,6 +10,19 @@
   - Implemented `evolve_system` main loop with correct operation sequence.
   - Added structured logging and history recording for reproducibility.
 
+- UI alignment with DSIM physics on controls page:
+  - Extended `AdvancedControlsPanel` to expose DSIM parameters: `dsimDensityRate (λ)`, `dsimProximityThreshold (r₀)`, and `dsimTimeStep (dt)` with theory-tooltips. Gated via context setters in `controls-page.tsx`.
+  - In `enhanced-three-js-visualization.tsx`, gated inter-manifold interactions (flux vectors, necking bridges) by color neutrality (Z3) and a DSIM-like locality threshold. Necking requires average pairwise distance ≤ r₀. This reflects Pushout locality and CCP neutrality in manifold interactions.
+
+- Trimmed controls to hypothesis-relevant parameters:
+  - Removed generic mesh/viscosity/elastic/damping sliders and non-essential visualization toggles from the advanced controls panel, keeping DSIM (λ, r₀, dt), confinement (holonomy, Pin⁻, σ, scale), and necking (pushout visualization). Non-hypothesis controls no longer affect the model.
+
+- Renamed project from "SKB" to "4D Manifold":
+  - Updated all component names, titles, and references from "SKB" to "4D Manifold" across the codebase
+  - Renamed directory from `skb-baryon-demo` to `4d-manifold-baryon-demo`
+  - Updated docker-compose.yml and README.md to reflect new naming
+  - Maintained all functionality while updating terminology for clarity
+
 ## Initial Refactor for CI/CD
 - Added Docker and Docker Compose setup.
 - Configured GitHub Actions for CI/CD.
@@ -61,7 +74,7 @@
 - Ensured the base wireframe geometry is strictly formula-derived (Klein bottle parametric equations) and unaffected by fluid/physics deformations.
 - In `enhanced-three-js-visualization.tsx`, removed deformation application inside the manifold point computation. Overlays (deformation ripples, necking, fluid vectors, stress) are now rendered in separate groups.
 - Rotation now scales by `holonomyStrength` from controls; confinement scale uses `confinementScale` control directly (no hidden multipliers).
-- Set default `showDeformation` to false in `enhanced-skb-visualization-app.tsx` so users see pure manifolds by default.
+- Set default `showDeformation` to false in `enhanced-4d-manifold-visualization-app.tsx` so users see pure manifolds by default.
 - Updated `advanced-controls-panel.tsx` description to clarify overlays vs base manifold.
 - Rebuilt Docker image and verified app starts successfully.
 

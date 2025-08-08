@@ -35,6 +35,12 @@ interface FluidEnhancedThreeJSVisualizationProps {
   showNecking: boolean;
   showFluidDynamics: boolean;
   
+  // Camera controls (optional): allow external UI to control view
+  cameraFov?: number;           // Field of view in degrees (e.g., 30-100)
+  cameraDistance?: number;      // Distance from origin (e.g., 3-20)
+  cameraRotX?: number;          // Vertical rotation (radians)
+  cameraRotY?: number;          // Horizontal rotation (radians)
+  
   // Callbacks for real-time data
   onConfinementUpdate?: (data: any) => void;
   onPhysicsUpdate?: (data: any) => void;
@@ -56,6 +62,10 @@ const FluidEnhancedThreeJSVisualization: React.FC<FluidEnhancedThreeJSVisualizat
   showFluidFlow,
   showNecking,
   showFluidDynamics,
+  cameraFov,
+  cameraDistance,
+  cameraRotX,
+  cameraRotY,
   onConfinementUpdate,
   onPhysicsUpdate,
   onFluidDynamicsUpdate
@@ -67,6 +77,12 @@ const FluidEnhancedThreeJSVisualization: React.FC<FluidEnhancedThreeJSVisualizat
   const frameRef = useRef<number>(0);
   const animationIdRef = useRef<number>();
   const timeRef = useRef<number>(0);
+  
+  // External camera control refs for smooth updates
+  const externalFovRef = useRef<number | undefined>(cameraFov);
+  const externalDistanceRef = useRef<number | undefined>(cameraDistance);
+  const externalRotXRef = useRef<number | undefined>(cameraRotX);
+  const externalRotYRef = useRef<number | undefined>(cameraRotY);
   
   // Add ref to track isPlaying state for animation loop
   const isPlayingRef = useRef<boolean>(isPlaying);
@@ -360,6 +376,7 @@ const FluidEnhancedThreeJSVisualization: React.FC<FluidEnhancedThreeJSVisualizat
     };
 
     const handleWheel = (event: WheelEvent) => {
+      // Mouse wheel zoom control; clamped to a safe range
       camera.position.z += event.deltaY * 0.01;
       camera.position.z = Math.max(3, Math.min(20, camera.position.z));
     };
@@ -387,7 +404,28 @@ const FluidEnhancedThreeJSVisualization: React.FC<FluidEnhancedThreeJSVisualizat
       currentRotation.x += (targetRotation.x - currentRotation.x) * 0.08;
       currentRotation.y += (targetRotation.y - currentRotation.y) * 0.08;
       
-      const radius = camera.position.z;
+      // Apply external camera overrides from props (if provided)
+      externalFovRef.current = cameraFov;
+      externalDistanceRef.current = cameraDistance;
+      externalRotXRef.current = cameraRotX;
+      externalRotYRef.current = cameraRotY;
+
+      if (typeof externalFovRef.current === 'number' && camera.fov !== externalFovRef.current) {
+        camera.fov = externalFovRef.current;
+        camera.updateProjectionMatrix();
+      }
+
+      if (typeof externalRotXRef.current === 'number') {
+        targetRotation.x = externalRotXRef.current;
+      }
+      if (typeof externalRotYRef.current === 'number') {
+        targetRotation.y = externalRotYRef.current;
+      }
+
+      const radius = typeof externalDistanceRef.current === 'number' 
+        ? Math.max(3, Math.min(20, externalDistanceRef.current))
+        : camera.position.z;
+
       camera.position.x = radius * Math.sin(currentRotation.y) * Math.cos(currentRotation.x);
       camera.position.y = radius * Math.sin(currentRotation.x);
       camera.position.z = radius * Math.cos(currentRotation.y) * Math.cos(currentRotation.x);

@@ -14,6 +14,7 @@ import {
 import EssentialControls from './essential-controls';
 import FluidEnhancedThreeJSVisualization from './fluid-enhanced-three-js-visualization';
 import Navigation from './navigation';
+import { Slider } from '@/components/ui/slider';
 
 // Import context and types
 import { useVisualization } from '@/contexts/visualization-context';
@@ -29,6 +30,12 @@ const SimplifiedVisualizationPage: React.FC = () => {
     handlePhysicsUpdate,
     handleFluidDynamicsUpdate
   } = useVisualization();
+
+  // Local camera control state
+  const [cameraDistance, setCameraDistance] = React.useState<number>(10);
+  const [cameraRotX, setCameraRotX] = React.useState<number>(0);
+  const [cameraRotY, setCameraRotY] = React.useState<number>(0);
+  const [cameraFov, setCameraFov] = React.useState<number>(75);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
@@ -158,11 +165,38 @@ const SimplifiedVisualizationPage: React.FC = () => {
                   showNecking={state.showNecking}
                   showFluidDynamics={state.showFluidDynamics}
                   
+                  // Camera controls
+                  cameraFov={cameraFov}
+                  cameraDistance={cameraDistance}
+                  cameraRotX={cameraRotX}
+                  cameraRotY={cameraRotY}
+                  
                   // Real-time callbacks
                   onConfinementUpdate={handleConfinementUpdate}
                   onPhysicsUpdate={handlePhysicsUpdate}
                   onFluidDynamicsUpdate={handleFluidDynamicsUpdate}
                 />
+              </div>
+              {/* Camera Controls */}
+              <div className="px-4 py-3 bg-white/90 border-t">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-1">Zoom (Distance): {cameraDistance.toFixed(1)}</div>
+                    <Slider value={[cameraDistance]} onValueChange={([v]) => setCameraDistance(Math.max(3, Math.min(20, v)))} min={3} max={20} step={0.1} />
+                  </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-1">Field of View: {Math.round(cameraFov)}°</div>
+                    <Slider value={[cameraFov]} onValueChange={([v]) => setCameraFov(Math.max(30, Math.min(100, v)))} min={30} max={100} step={1} />
+                  </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-1">Rotate X: {cameraRotX.toFixed(2)} rad</div>
+                    <Slider value={[cameraRotX]} onValueChange={([v]) => setCameraRotX(v)} min={-1.2} max={1.2} step={0.01} />
+                  </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-1">Rotate Y: {cameraRotY.toFixed(2)} rad</div>
+                    <Slider value={[cameraRotY]} onValueChange={([v]) => setCameraRotY(v)} min={-3.14} max={3.14} step={0.01} />
+                  </div>
+                </div>
               </div>
               
               {/* Status Strip */}

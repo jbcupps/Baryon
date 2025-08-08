@@ -164,7 +164,7 @@ const AnalysisSection: React.FC = () => {
             Quark Properties Analysis
           </CardTitle>
           <CardDescription>
-            Complete quark spectrum from SKB mathematical framework
+            Complete quark spectrum from 4D Manifold mathematical framework
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -300,7 +300,7 @@ const AnalysisSection: React.FC = () => {
             QCD Color Theory & Visualization
           </CardTitle>
           <CardDescription>
-            Quantum Chromodynamics color representation in SKB framework
+            Quantum Chromodynamics color representation in 4D Manifold framework
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -444,7 +444,7 @@ const AnalysisSection: React.FC = () => {
                       <th>Property</th>
                       <th>Electromagnetic</th>
                       <th>QCD Color Force</th>
-                      <th>SKB Interpretation</th>
+                      <th>4D Manifold Interpretation</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -530,7 +530,7 @@ const AnalysisSection: React.FC = () => {
             Physical Constants & Their Roles
           </CardTitle>
           <CardDescription>
-            Fundamental constants in the SKB framework
+            Fundamental constants in the 4D Manifold framework
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -542,7 +542,7 @@ const AnalysisSection: React.FC = () => {
                   <th>Symbol</th>
                   <th>Value</th>
                   <th>Formula</th>
-                  <th>Role in SKB</th>
+                  <th>Role in 4D Manifold</th>
                 </tr>
               </thead>
               <tbody>

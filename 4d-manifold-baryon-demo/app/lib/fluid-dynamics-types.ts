@@ -120,8 +120,8 @@ export const DEFAULT_FLUID_DYNAMICS_PARAMS: FluidDynamicsParameters = {
   tension_scalar: 0.3,
   
   // Proximity physics
-  proximityInfluence: 0.7,
-  proximityThreshold: 2.0,
+  proximityInfluence: 0.85,
+  proximityThreshold: 3.0,
   forceDecayRate: 0.8,
   
   // Time-varying warping

@@ -1,7 +1,7 @@
 services:
   app:
     build:
-      context: ./skb-baryon-demo/app
+      context: ./4d-manifold-baryon-demo/app
       dockerfile: Dockerfile
     env_file:
       - .env

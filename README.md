@@ -1,27 +1,23 @@
-# SKB Baryon Visualization
+# 4D Manifold Baryon Visualization
 
-This project presents an interactive 3D mathematical modeling tool for visualizing baryon formation under the Spacetime Klein Bottle (SKB) hypothesis. It provides a dynamic and educational platform to explore how fundamental particles, represented as topological defects, merge to form stable structures like protons and neutrons.
+This project presents an interactive 3D mathematical modeling tool for visualizing baryon formation under the 4D Manifold hypothesis. It provides a dynamic and educational platform to explore how fundamental particles, represented as topological defects, merge to form stable structures like protons and neutrons.
 
-The visualization is built on a robust mathematical framework, incorporating concepts like quaternionic holonomy, Pin⁻ structures, and causal compensation to deliver a physically accurate and visually engaging experience.
+## Overview
 
-## Core Concepts
+The **4D Manifold hypothesis** proposes that:
+- Fundamental particles are non-orientable topological defects in 4D spacetime
+- Quarks are sub-4D Manifolds with Klein bottle topology
+- Baryons form through the merger of three sub-4D Manifolds
 
-The **Spacetime Klein Bottle (SKB) hypothesis** proposes that:
-- Spacetime is the only fundamental entity.
-- Fundamental particles are non-orientable topological defects in 4D spacetime, specifically with the topology similar to a Klein bottle.
-- Forces and particle properties emerge from the topological and geometric properties of these defects.
-
-This application visualizes the "merger" of three quark sub-SKBs into a single, stable baryon, demonstrating concepts like color confinement and mass generation through binding energy.
+This application visualizes the "merger" of three quark sub-4D Manifolds into a single, stable baryon, demonstrating concepts like color confinement and mass generation through binding energy.
 
 ## Features
 
-- **Interactive 3D Visualization**: Real-time rendering of the quark merger process using Three.js and React Three Fiber.
-- **Baryon Presets**: Pre-configured visualizations for the formation of a **Proton (uud)** and a **Neutron (udd)**.
-- **Dynamic Animations**: Smooth animations showing the transition from three separate quarks into a single baryon structure.
-- **Mathematical Accuracy**: All visual parameters (scale, rotation, flux vectors) are derived from the physical properties defined in the SKB mathematical framework.
-- **Real-time Data Display**: View key mathematical data, such as holonomy values and confinement strength, update in real time as the animation progresses.
-- **Advanced Control Panel**: Fine-tune physics parameters like deformation intensity, fluid viscosity, and confinement strength to see their effect on the simulation.
-- **Educational Overlays**: Toggle the display of mathematical formulas and analysis sections to better understand the underlying physics.
+- **Interactive 3D Visualization**: Real-time rendering of Klein bottle manifolds using Three.js
+- **Mathematical Accuracy**: All visualizations are based on the physical properties defined in the 4D Manifold mathematical framework
+- **Educational Tools**: Comprehensive analysis and mathematical formula displays
+- **Real-time Physics**: Dynamic simulation of baryon formation with color confinement
+- **Advanced Controls**: Fine-tuned parameters for exploration and analysis
 
 ## Technology Stack
 
@@ -41,7 +37,7 @@ The project is organized as a monorepo with the following structure:
 /
 ├── .github/workflows/        # CI/CD pipeline configuration
 ├── documents/                # Project documentation and update logs
-├── skb-baryon-demo/
+├── 4d-manifold-baryon-demo/
 │   └── app/                  # The core Next.js application source code
 ├── .env.example              # Example environment variables
 ├── docker-compose.yml        # Docker service orchestration
@@ -99,7 +95,7 @@ This command will:
 
 ### 4. Access the Application
 
-Once the containers are running, you can access the SKB Baryon Visualization in your browser at:
+Once the containers are running, you can access the 4D Manifold Baryon Visualization in your browser at:
 
 **[http://localhost:3000](http://localhost:3000)**
 
@@ -107,7 +103,7 @@ The PostgreSQL database will be running and accessible on port `5432`.
 
 ## Available Scripts
 
-The following scripts are available in the `skb-baryon-demo/app/package.json` file and can be run inside the `app` container:
+The following scripts are available in the `4d-manifold-baryon-demo/app/package.json` file and can be run inside the `app` container:
 
 - `npm run dev`: Starts the application in development mode.
 - `npm run build`: Builds the application for production.

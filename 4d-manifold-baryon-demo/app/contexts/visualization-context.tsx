@@ -97,14 +97,14 @@ export const VisualizationProvider: React.FC<VisualizationProviderProps> = ({ ch
   const [state, setState] = useState<VisualizationState>({
     // Basic control state
     selectedPreset: 'proton',
-    isPlaying: false,
+    isPlaying: true,
     progress: 0,
     showFlux: true,
     showRotation: true,
 
     // DSIM defaults (aligned with DSIM spec)
     dsimDensityRate: 10,
-    dsimProximityThreshold: 1.5,
+    dsimProximityThreshold: 2.5,
     dsimTimeStep: 1.0,
 
     // Advanced physics parameters
@@ -138,7 +138,7 @@ export const VisualizationProvider: React.FC<VisualizationProviderProps> = ({ ch
     showDeformation: true,
     showStressTensor: false,
     showFluidFlow: false,
-    showNecking: false,
+    showNecking: true,
     showFluidDynamics: true, // New toggle for fluid dynamics
 
     // Real-time data from visualization

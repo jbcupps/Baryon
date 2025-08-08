@@ -130,7 +130,7 @@ const OptimizedControlPanel: React.FC<OptimizedControlPanelProps> = ({
             Optimized Baryon Configuration
           </CardTitle>
           <CardDescription>
-            Physically-motivated parameters from SKB hypothesis
+            Physically-motivated parameters from 4D Manifold hypothesis
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
