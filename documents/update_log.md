@@ -54,3 +54,11 @@
 - Set default `showDeformation` to false in `enhanced-skb-visualization-app.tsx` so users see pure manifolds by default.
 - Updated `advanced-controls-panel.tsx` description to clarify overlays vs base manifold.
 - Rebuilt Docker image and verified app starts successfully.
+
+## DSIM_Simulation: Phase A setup
+- Created `DSIM_Simulation/` project with subdirectories: `src/dsim/`, `src/visualization/`, `scripts/`, `data/`, `plots/`.
+- Added `__init__.py` in `src/dsim/` and `src/visualization/`.
+- Added `requirements.txt` with numpy, scipy, plotly, pandas, matplotlib, seaborn.
+- Implemented `src/dsim/structures.py` with `InstantonKq` (Z3 holonomy assignment) and `CompositeConfig` (pushout, barycenter, stability heuristic).
+- Implemented `src/dsim/environment.py` with `DSIM_Environment` skeleton and structured logging.
+- Added `DSIM_Simulation/Dockerfile` and updated root `docker-compose.yml` with `dsim` service.

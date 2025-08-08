@@ -12,6 +12,7 @@ services:
       - NODE_ENV=production
     depends_on:
       - db
+      - dsim
 
   db:
     image: postgres:16
@@ -26,6 +27,15 @@ services:
       - '5432:5432'
     volumes:
       - db-data:/var/lib/postgresql/data
+
+  dsim:
+    build:
+      context: ./DSIM_Simulation
+      dockerfile: Dockerfile
+    container_name: dsim-svc
+    command: python -c "print('DSIM service up')"
+    volumes:
+      - ./DSIM_Simulation:/app
 
 volumes:
   db-data: 
