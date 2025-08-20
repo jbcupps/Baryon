@@ -1,5 +1,11 @@
 # Project Update Log
 
+2025-08-09
+- IDE extension audit and cleanup performed via CLI.
+- Uninstalled: `eamodio.gitlens`, `ms-azuretools.vscode-docker`, `ms-azuretools.vscode-containers`.
+- Kept core stack: Python (`ms-python.python`, `ms-python.vscode-pylance`, `ms-python.debugpy`), YAML (`redhat.vscode-yaml`), Remote Containers (`ms-vscode-remote.remote-containers`), GitHub Actions (`github.vscode-github-actions`).
+- Added workspace recommendations file at `.vscode/extensions.json` with recommended and unwanted extensions to standardize environment across contributors.
+
 2025-08-08
 - Implemented Phase B: DSIM simulation logic in `DSIM_Simulation/src/dsim/environment.py`.
   - Added `generate_fluctuations` using Poisson process with configurable flavor ratios. [Theory: stochastic vacuum fluctuations]
