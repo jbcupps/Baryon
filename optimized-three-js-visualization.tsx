@@ -28,20 +28,6 @@ const OptimizedThreeJSVisualization: React.FC<OptimizedThreeJSVisualizationProps
   const animationIdRef = useRef<number>();
   const kleinBottleGroupRef = useRef<THREE.Group>();
   const fluxGroupRef = useRef<THREE.Group>();
-
-  // Stable refs so controls immediately affect the running loop
-  const isPlayingRef = useRef<boolean>(isPlaying);
-  const progressRef = useRef<number>(progress);
-  const showFluxRef = useRef<boolean>(showFlux);
-  const showRotationRef = useRef<boolean>(showRotation);
-  const presetRef = useRef<typeof currentPreset>(currentPreset);
-
-  useEffect(() => { isPlayingRef.current = isPlaying; }, [isPlaying]);
-  useEffect(() => { progressRef.current = progress; }, [progress]);
-  useEffect(() => { showFluxRef.current = showFlux; }, [showFlux]);
-  useEffect(() => { showRotationRef.current = showRotation; }, [showRotation]);
-  useEffect(() => { presetRef.current = currentPreset; }, [selectedPreset]);
-
   // Optimized preset configurations based on physical calculations
   const optimizedPresets = {
     proton: {
@@ -110,6 +96,19 @@ const OptimizedThreeJSVisualization: React.FC<OptimizedThreeJSVisualizationProps
   };
 
   const currentPreset = optimizedPresets[selectedPreset as keyof typeof optimizedPresets];
+
+  // Stable refs so controls immediately affect the running loop
+  const isPlayingRef = useRef<boolean>(isPlaying);
+  const progressRef = useRef<number>(progress);
+  const showFluxRef = useRef<boolean>(showFlux);
+  const showRotationRef = useRef<boolean>(showRotation);
+  const presetRef = useRef<typeof currentPreset>(currentPreset);
+
+  useEffect(() => { isPlayingRef.current = isPlaying; }, [isPlaying]);
+  useEffect(() => { progressRef.current = progress; }, [progress]);
+  useEffect(() => { showFluxRef.current = showFlux; }, [showFlux]);
+  useEffect(() => { showRotationRef.current = showRotation; }, [showRotation]);
+  useEffect(() => { presetRef.current = currentPreset; }, [selectedPreset]);
 
   // Optimized Klein bottle parametric function with physical scaling
   const kleinBottle = (u: number, v: number, scale: number, offset: THREE.Vector3, rotationAngle: number = 0): THREE.Vector3 => {
